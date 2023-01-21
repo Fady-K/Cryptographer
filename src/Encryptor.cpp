@@ -52,7 +52,7 @@ int Encryptor::GetTotalNumberOfTheAliveEncryptors(){return m_NoCurrentEncyptors;
  * @brief Construct a new Encryptor:: Encryptor object
  * @details This is the default constructor, It initailzes instance attributes with values were determined by class maker 
  */
-Encryptor::Encryptor(): m_OriginalSenctence(""), m_IsEncrypted(false)                           // Default constructor
+Encryptor::Encryptor(): m_OriginalSenctence(""), m_EncryptedSenctence("None"), m_UsedCipher("None"), m_IsEncrypted(false)                           // Default constructor
 {
     // increment number of encryptors by one
     Encryptor::m_NoEncryptors ++;
@@ -65,7 +65,7 @@ Encryptor::Encryptor(): m_OriginalSenctence(""), m_IsEncrypted(false)           
  * @details This a parametrized constructor that initailzes the class member (m_OriginalSentence) with a given sentence to encrypt
  * @param t_sentence A given sentence desired to get encrypted via encryptor object
  */
-Encryptor::Encryptor(string t_sentence): m_OriginalSenctence(t_sentence), m_IsEncrypted(false)
+Encryptor::Encryptor(string t_sentence): m_OriginalSenctence(t_sentence), m_EncryptedSenctence("None"), m_UsedCipher("None"), m_IsEncrypted(false)
 {
     // increment number of encryptors by one
     Encryptor::m_NoEncryptors ++;
@@ -78,7 +78,7 @@ Encryptor::Encryptor(string t_sentence): m_OriginalSenctence(t_sentence), m_IsEn
  * @details This the Default copy constructor that initializes instance attributes of this object with the attribute values of anther encryptor
  * @param t_anotherEncryptor Object of the same type to init this with it's attributes
  */
-Encryptor::Encryptor(const Encryptor& t_anotherEncryptor): m_OriginalSenctence(t_anotherEncryptor.m_OriginalSenctence), m_IsEncrypted( t_anotherEncryptor.m_IsEncrypted), m_EncryptedSenctence(t_anotherEncryptor.m_EncryptedSenctence)
+Encryptor::Encryptor(const Encryptor& t_anotherEncryptor): m_OriginalSenctence(t_anotherEncryptor.m_OriginalSenctence), m_UsedCipher(t_anotherEncryptor.m_UsedCipher), m_IsEncrypted( t_anotherEncryptor.m_IsEncrypted), m_EncryptedSenctence(t_anotherEncryptor.m_EncryptedSenctence)
 {
     // increment number of encryptors by one
     Encryptor::m_NoEncryptors ++;
@@ -95,6 +95,7 @@ Encryptor& Encryptor::operator=(const Encryptor& t_anotherEncryptor)
 {
     // do the copy
     this-> m_OriginalSenctence = t_anotherEncryptor.m_OriginalSenctence;
+    this-> m_UsedCipher = t_anotherEncryptor.m_UsedCipher;
     this-> m_IsEncrypted = t_anotherEncryptor.m_IsEncrypted;
     this-> m_EncryptedSenctence = t_anotherEncryptor.m_EncryptedSenctence;
 
@@ -136,15 +137,23 @@ inline void Encryptor::SetSentenceToEncrypt(string t_senctence) { m_OriginalSenc
  * 
  * @return string The Current value of m_OriginalSentence
  */
-inline string Encryptor::GetOriginalSenctence() { return m_OriginalSenctence; }
+inline string Encryptor::GetOriginalSenctence() const { return m_OriginalSenctence; }
 
 
-/**
+/** 
  * @brief A Getter method to return the current value of m_EncryptedSentence (instance attribute)
  * 
  * @return string Value of m_EncryptedSenctence
  */
-inline string Encryptor::GetEncryptedSentence() { return m_EncryptedSenctence; }
+inline string Encryptor::GetEncryptedSentence() const { return m_EncryptedSenctence; }
+
+
+/** 
+ * @brief A Getter method to return the current value of m_UsedCipher (instance attribute)
+ * 
+ * @return string Value of m_UsedCipher
+ */
+inline string Encryptor::GetUsedCipher() const {return m_UsedCipher; }
 
 
 /**
@@ -153,7 +162,7 @@ inline string Encryptor::GetEncryptedSentence() { return m_EncryptedSenctence; }
  * @return true 
  * @return false 
  */
-inline bool Encryptor::IsSentenceGotEncrpyted() { return m_IsEncrypted; }
+inline bool Encryptor::IsSentenceGotEncrpyted() const { return m_IsEncrypted; }
 
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -162,13 +171,13 @@ inline bool Encryptor::IsSentenceGotEncrpyted() { return m_IsEncrypted; }
 
 
 /**
- * @brief This function takes a sentence from user then encrpted using affice cipher
+ * @brief This function takes a sentence from user then encrypts it using Affine cipher
  * @details For details on affice cipher check this link: https://en.wikipedia.org/wiki/Affine_cipher
  * @details this function doesn't deal with the instance attributes, it's an overload for the basic one 
  * @param t_sentenceToGetEncrypted Original sentence (will be encrypted)
  * @return string Senctenc after being encrypted (Encrypted sentence)
  */
-string Encryptor::EncryptUsingAffineCipher(string t_sentenceToGetEncrypted)
+string Encryptor::EncryptUsingAffineCipher (string t_sentenceToGetEncrypted) const
 {
     // take a, b, c from the user 
     cout << "Enter The value of (a, b) Where (a*x + b) % 26 Is The Formula of Encryption: ";
@@ -222,19 +231,22 @@ void Encryptor::EncryptUsingAffineCipher()
     // dry
     m_EncryptedSenctence = Encryptor::EncryptUsingAffineCipher(m_OriginalSenctence);
 
+    // cipher used in encryption process: affine cipher
+    m_UsedCipher = "Affine Cipher";
+
     // senctence has been encrypted
     m_IsEncrypted = true;
 }
 
 
 /**
- * @brief This function takes a sentence from user then encrpted using atpash cipher
+ * @brief This function takes a sentence from user then encrypts it using atpash cipher
  * @details For details on affice cipher check this link: https://en.wikipedia.org/wiki/Atpash_cipher
  * @details this function doesn't deal with the instance attributes, it's an overload for the basic one 
  * @param t_sentenceToGetEncrypted Original sentence (will be encrypted)
  * @return string Senctenc after being encrypted (Encrypted sentence)
  */
-string Encryptor::EncryptUsingAtpashCipher(string t_sentenceToGetEncrypted)
+string Encryptor::EncryptUsingAtpashCipher(string t_sentenceToGetEncrypted) const
 {
     // store space'index
     string message_without_space;
@@ -255,8 +267,6 @@ string Encryptor::EncryptUsingAtpashCipher(string t_sentenceToGetEncrypted)
     
         // to remove char from string 
     t_sentenceToGetEncrypted.erase(remove(t_sentenceToGetEncrypted.begin(),t_sentenceToGetEncrypted.end(), 32), t_sentenceToGetEncrypted.end());
-
-
 
 
     // convert string into upper case
@@ -311,19 +321,22 @@ void Encryptor::EncryptUsingAtpashCipher()
 {
     m_EncryptedSenctence = Encryptor::EncryptUsingAtpashCipher(m_OriginalSenctence);
 
+    // cipher used in encryption process: atpash cipher
+    m_UsedCipher = "Atpash Cipher";
+
     // senctence has been encrypted
     m_IsEncrypted = true;
 }
 
 
 /**
- * @brief This function takes a sentence from user then encrpted using Baconian cipher
+ * @brief This function takes a sentence from user then encrypts it using Baconian cipher
  * @details For details on affice cipher check this link: https://en.wikipedia.org/wiki/Bacon%27s_cipher
  * @details this function doesn't deal with the instance attributes, it's an overload for the basic one 
  * @param t_sentenceToGetEncrypted Original sentence (will be encrypted)
  * @return string Senctenc after being encrypted (Encrypted sentence)
  */
-string Encryptor::EncryptUsingBaconianCipher(string t_sentenceToGetEncrypted)
+string Encryptor::EncryptUsingBaconianCipher(string t_sentenceToGetEncrypted) const
 {
     // conver all letter's into upper case 
     for(auto &c: t_sentenceToGetEncrypted) c = toupper(c); // actually this not important i could have neglect it by using full lowercase Alphabet instead of upper case one
@@ -376,19 +389,22 @@ void Encryptor::EncryptUsingBaconianCipher()
 {
     m_EncryptedSenctence = Encryptor::EncryptUsingBaconianCipher(m_OriginalSenctence);
 
+    // cipher used in encryption process: Baconian Cipher
+    m_UsedCipher = "Baconian Cipher";
+
     // senctence has been encrypted
     m_IsEncrypted = true;
 }
 
 
 /**
- * @brief This function takes a sentence from user then encrpted using Caesar Cipher
+ * @brief This function takes a sentence from user then encrypts it using Caesar Cipher
  * @details For details on affice cipher check this link: https://en.wikipedia.org/wiki/Caesar_cipher
  * @details this function doesn't deal with the instance attributes, it's an overload for the basic one 
  * @param t_sentenceToGetEncrypted Original sentence (will be encrypted)
  * @return string Senctenc after being encrypted (Encrypted sentence)
  */
-string Encryptor::EncryptUsingCaesarCipher(string t_sentenceToGetEncrypted)
+string Encryptor::EncryptUsingCaesarCipher(string t_sentenceToGetEncrypted) const
 {
     // convert all letter into upper case
     for (auto &c : t_sentenceToGetEncrypted) c = toupper(c);
@@ -434,6 +450,9 @@ void Encryptor::EncryptUsingCaesarCipher()
 {
     m_EncryptedSenctence = Encryptor::EncryptUsingCaesarCipher(m_OriginalSenctence);
 
+    // cipher used in encryption process: Caesar Cipher
+    m_UsedCipher = "Caesar Cipher";
+
     // senctence has been encrypted
     m_IsEncrypted = true;
 }
@@ -446,7 +465,7 @@ void Encryptor::EncryptUsingCaesarCipher()
  * @param t_sentenceToGetEncrypted Original sentence (will be encrypted)
  * @return string Senctenc after being encrypted (Encrypted sentence)
  */
-string Encryptor::EncryptUsingMorseCode(string t_sentenceToGetEncrypted)
+string Encryptor::EncryptUsingMorseCode(string t_sentenceToGetEncrypted) const
 {
     // credentials
     string morse_code[36] = {".-", "-...", "-.-.", "-..", ".", "..-.", "--.", "....", "..", ".---", "-.-", ".-..", "--", "-.", "---", ".--.", "--.-", ".-.", "...", "-", "..-", "...-", ".--", "-..-", "-.--", "--..", "-----", ".----","..---","...--","....-",".....","-....","--....","---..", "----."};
@@ -499,6 +518,9 @@ void Encryptor::EncryptUsingMorseCode()
 {
     m_EncryptedSenctence = Encryptor::EncryptUsingMorseCode(m_OriginalSenctence);
 
+    // cipher used in encryption process: Morse code
+    m_UsedCipher = "Morse Code";
+
     // senctence has been encrypted
     m_IsEncrypted = true;
 }
@@ -511,7 +533,7 @@ void Encryptor::EncryptUsingMorseCode()
  * @param t_sentenceToGetEncrypted Original sentence (will be encrypted)
  * @return string Senctenc after being encrypted (Encrypted sentence)
  */
-string Encryptor::EncryptUsingSimpleSubstitutionCipher(string t_sentenceToGetEncrypted)
+string Encryptor::EncryptUsingSimpleSubstitutionCipher(string t_sentenceToGetEncrypted) const
 {
     // convert the message into uppercase
     for (auto &c : t_sentenceToGetEncrypted) c = toupper(c);
@@ -569,6 +591,9 @@ void Encryptor::EncryptUsingSimpleSubstitutionCipher()
 {
     m_EncryptedSenctence = Encryptor::EncryptUsingSimpleSubstitutionCipher(m_OriginalSenctence);
 
+    // cipher used in encryption process: Simple Substitution Cipher
+    m_UsedCipher = "Simple Substitution Cipher";
+
     // senctence has been encrypted
     m_IsEncrypted = true;
 }
@@ -581,7 +606,7 @@ void Encryptor::EncryptUsingSimpleSubstitutionCipher()
  * @param t_sentenceToGetEncrypted Original sentence (will be encrypted)
  * @return string Senctenc after being encrypted (Encrypted sentence)
  */
-string Encryptor::EncryptUsingVignereCipher(string t_sentenceToGetEncrypted)
+string Encryptor::EncryptUsingVignereCipher(string t_sentenceToGetEncrypted) const
 {
     // conver all the message's letters into uppercase
     for (auto &c: t_sentenceToGetEncrypted) c = toupper(c);
@@ -659,14 +684,59 @@ void Encryptor::EncryptUsingVignereCipher()
 {
     m_EncryptedSenctence = Encryptor::EncryptUsingVignereCipher(m_OriginalSenctence);
 
+    // cipher used in encryption process: Vignere Cipher
+    m_UsedCipher = "Vignere Cipher";
+
     // senctence has been encrypted
     m_IsEncrypted = true;
 }
 
 
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+														/*  Operators Overloading ( Bitwise ) */
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+/**
+ * @brief Overloaded the insertion operator >>
+ * 
+ * @param input reference to istream 
+ * @return istream& reference to istream object (incase there is more than one >>) this solves (input >> x >> y) problem
+ */
+istream& operator>>(istream& input, Encryptor& encryptor)
+{
+    // take input
+    string s;
+    getline(input >> ws, s);
+
+    // add sentence
+    encryptor.SetSentenceToEncrypt(s);
+
+    // return istream refefrence (incase there is more than one >> )
+    return input;
+
+}
+
+
+/**
+ * @brief Overloaded the extraction operator <<
+ * 
+ * @param output reference to ostream
+ * @param encryptor reference to encryptor (made it const, as this operator prints only and won't modify the given object)
+ * @return ostream& reference to ostream object incase there is more than <<
+ */
+ostream& operator<<(ostream& output, const Encryptor& encryptor)
+{
+    // print the encrpytor
+    output << "---- Encryptor Details ----\n";
+    output << "Original Sentence ( Unencrypted ): " << encryptor.GetOriginalSenctence() << "\n" << "Encrypted Senctence: " << encryptor.GetEncryptedSentence() << "\n" << "Used Cipher: " << encryptor.GetUsedCipher() << "\n";
+
+    // return refrence to ostream (incase there is more than one << )
+    return output;
+}
+
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-														/* (Helper Functions ) */
+														/* ( Helper Functions ) */
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 /**
@@ -676,7 +746,7 @@ void Encryptor::EncryptUsingVignereCipher()
  * @param b 
  * @return long 
  */
-long Encryptor::Mod(int a, int b){ return (a%b + b) % b; }
+long Encryptor::Mod(int a, int b) const { return (a%b + b) % b; }
 
 
 /**
@@ -686,7 +756,7 @@ long Encryptor::Mod(int a, int b){ return (a%b + b) % b; }
  * @param t_alphabet 
  * @param t_key 
  */
-void Encryptor::ModifyAlphabet(string &t_modifiedAlphabet, string t_alphabet, string &t_key)
+void Encryptor::ModifyAlphabet(string &t_modifiedAlphabet, string t_alphabet, string &t_key) const
 {
   // first loop to fetch each char from abc
     for (int i = 0; i < t_alphabet.length(); ++i)
