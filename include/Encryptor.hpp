@@ -23,6 +23,7 @@ class Encryptor
 protected:
     string m_OriginalSenctence;
     string m_EncryptedSenctence;
+    string m_UsedCipher;
     bool m_IsEncrypted;
     
 
@@ -34,12 +35,6 @@ protected:
     /* Big 5 InAddition to (parametrized constructors) */
 public:
     Encryptor();                                // Default constructor
-
-    /**
-     * @brief Construct a new Encryptor:: Encryptor object
-     * @details This a parametrized constructor that initailzes the class member (m_OriginalSentence) with a given sentence to encrypt
-     * @param t_sentence A given sentence desired to get encrypted via encryptor object
-     */
     Encryptor(string t_sentence);               // Parametrized constructor
     Encryptor(const Encryptor &);               // Copy constructor
     Encryptor& operator= (const Encryptor &);   // Copy assignment operator
@@ -50,34 +45,38 @@ public:
 
     /* Instance Methods (Setter and Getters) */
     inline void SetSentenceToEncrypt(string t_senctence);
-    inline string GetOriginalSenctence();
+    inline string GetOriginalSenctence() const;
 
-    inline string GetEncryptedSentence();
+    inline string GetEncryptedSentence() const;
+    inline string GetUsedCipher() const;
 
-    inline bool IsSentenceGotEncrpyted();
+    inline bool IsSentenceGotEncrpyted() const;
 
 
     /* Ciphers */
-    string EncryptUsingAffineCipher(string t_sentenceToGetEncrypted);                   // Affine Cipher
+    string EncryptUsingAffineCipher(string t_sentenceToGetEncrypted) const;                   // Affine Cipher
     void EncryptUsingAffineCipher();                                                    // An overloaded version to encrypt a given sentence
 
-    string EncryptUsingAtpashCipher(string t_sentenceToGetEncrypted);
+    string EncryptUsingAtpashCipher(string t_sentenceToGetEncrypted) const;
     void EncryptUsingAtpashCipher();
 
-    string EncryptUsingBaconianCipher(string t_sentenceToGetEncrypted);
+    string EncryptUsingBaconianCipher(string t_sentenceToGetEncrypted) const;
     void EncryptUsingBaconianCipher();
 
-    string EncryptUsingCaesarCipher(string t_sentenceToGetEncrypted);
+    string EncryptUsingCaesarCipher(string t_sentenceToGetEncrypted) const;
     void EncryptUsingCaesarCipher();
 
-    string EncryptUsingMorseCode(string t_sentenceToGetEncrypted);
+    string EncryptUsingMorseCode(string t_sentenceToGetEncrypted) const;
     void EncryptUsingMorseCode();
 
-    string EncryptUsingSimpleSubstitutionCipher(string t_sentenceToGetEncrypted);
+    string EncryptUsingSimpleSubstitutionCipher(string t_sentenceToGetEncrypted) const;
     void EncryptUsingSimpleSubstitutionCipher();
 
-    string EncryptUsingVignereCipher(string t_sentenceToGetEncrypted);
+    string EncryptUsingVignereCipher(string t_sentenceToGetEncrypted) const;
     void EncryptUsingVignereCipher();
+
+
+
 
 
     /* Static Methods (Related To Class only) */
@@ -87,9 +86,7 @@ public:
 
     /* Helper functions */
 private:
-    long Mod(int a, int b);
-    void ModifyAlphabet(string &t_modifiedAlphabet, string t_alphabet, string &t_key);
-
-
+    long Mod(int a, int b) const;
+    void ModifyAlphabet(string &t_modifiedAlphabet, string t_alphabet, string &t_key) const;
 };
 
