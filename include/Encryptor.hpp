@@ -44,12 +44,12 @@ public:
 
 
     /* Instance Methods (Setter and Getters) */
-    void SetSentenceToEncrypt(string t_senctence);
-    string GetOriginalSenctence();
+    inline void SetSentenceToEncrypt(string t_senctence);
+    inline string GetOriginalSenctence();
 
-    string GetEncryptedSentence();
+    inline string GetEncryptedSentence();
 
-    bool IsSentenceGotEncrpyted();
+    inline bool IsSentenceGotEncrpyted();
 
 
     /* Ciphers */
@@ -76,6 +76,7 @@ public:
 
 
     /* Static Methods (Related To Class only) */
-    static int GetTotalNumberOfEncryptorThisClassMade();
+    static int GetTotalNumberOfEncryptorsThisClassMade();
+    static int GetTotalNumberOfTheAliveEncryptors();
 };
 
