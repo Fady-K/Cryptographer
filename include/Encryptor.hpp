@@ -14,6 +14,7 @@
 #include <limits>
 #include <cstring>
 #include <algorithm>
+#include <cmath>
 using namespace std;
 
 
@@ -21,6 +22,7 @@ class Encryptor
 {
     /* Instance Attributes  */
 protected:
+    string m_Id;
     string m_OriginalSenctence;
     string m_EncryptedSenctence;
     string m_UsedCipher;
@@ -49,6 +51,7 @@ public:
 
     inline string GetEncryptedSentence() const;
     inline string GetUsedCipher() const;
+    inline string GetId() const;
 
     inline bool IsSentenceGotEncrpyted() const;
 
@@ -82,10 +85,11 @@ public:
     /* Static Methods (Related To Class only) */
     static int GetTotalNumberOfEncryptorsThisClassMade();
     static int GetTotalNumberOfTheAliveEncryptors();
+    static string GenerateId(int totalNumberOfEncryptors); 
 
 
     /* Helper functions */
-private:
+public:
     long Mod(int a, int b) const;
     void ModifyAlphabet(string &t_modifiedAlphabet, string t_alphabet, string &t_key) const;
 };
