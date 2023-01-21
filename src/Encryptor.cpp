@@ -10,7 +10,7 @@
  */
 
 #include "..\include\Encryptor.hpp"
-
+const string Alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 														/* Static Attributes and Methods */
@@ -157,7 +157,541 @@ inline string Encryptor::GetEncryptedSentence() { return m_EncryptedSenctence; }
 inline bool Encryptor::IsSentenceGotEncrpyted() { return m_IsEncrypted; }
 
 
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+														/* (Instance Methods (Ciphers) */
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+/**
+ * @brief This function takes a sentence from user then encrpted using affice cipher
+ * @details For details on affice cipher check this link: https://en.wikipedia.org/wiki/Affine_cipher
+ * @details this function doesn't deal with the instance attributes, it's an overload for the basic one 
+ * @param t_sentenceToGetEncrypted Original sentence (will be encrypted)
+ * @return string Senctenc after being encrypted (Encrypted sentence)
+ */
+string Encryptor::EncryptUsingAffineCipher(string t_sentenceToGetEncrypted)
+{
+    // take a, b, c from the user 
+    cout << "Enter The value of (a, b) Where (a*x + b) % 26 Is The Formula of Encryption: ";
+    int a, b;
+    cin >> a >> b;
+
+    // convert all the message's letters into uppercase
+    for (auto &c: t_sentenceToGetEncrypted) c = toupper(c);
+    
+    // initiallize the Alphabet to fetch the chara position
+    string encrpyted;
+
+    int positionInAlphabet, newPosition;
+    char newChar;
+
+    // iterate over each chara of the message
+    for (int i = 0; i < t_sentenceToGetEncrypted.length(); ++i)
+    {
+        // fetch each chara in the message
+        char chara = t_sentenceToGetEncrypted[i];
+
+        // check if the char is space, add space to encrypted char and continue
+        if (chara == ' ')
+        {
+            encrpyted += " ";
+            continue;
+        }
+        else
+        {
+            // if not then fetch the char index from Alphabet (x), then  use the following foumla to get the new index >> (5x + 8)
+            positionInAlphabet = Alphabet.find(chara);  
+
+            // it's guranted that newPosition will be positive therefore i used the regulare division reminder >> %
+            newPosition = ((a * positionInAlphabet) + b) % 26;
+            newChar = Alphabet[newPosition];
+            encrpyted += newChar;
+        }
+    }
+
+    // return the encrypted message
+    return encrpyted;
+}
+
+
+/**
+ * @brief The Basic Encyrpting that object uses to encrypte instance attribute
+ * @details This function is based on the overloaded version: look above
+ */
+void Encryptor::EncryptUsingAffineCipher()
+{
+    m_EncryptedSenctence = Encryptor::EncryptUsingAffineCipher(m_OriginalSenctence);
+}
+
+
+/**
+ * @brief This function takes a sentence from user then encrpted using atpash cipher
+ * @details For details on affice cipher check this link: https://en.wikipedia.org/wiki/Atpash_cipher
+ * @details this function doesn't deal with the instance attributes, it's an overload for the basic one 
+ * @param t_sentenceToGetEncrypted Original sentence (will be encrypted)
+ * @return string Senctenc after being encrypted (Encrypted sentence)
+ */
+string Encryptor::EncryptUsingAtpashCipher(string t_sentenceToGetEncrypted)
+{
+    // store space'index
+    string message_without_space;
+
+    int spaces_index[t_sentenceToGetEncrypted.length() + 1];
+    int count = 0;
+    for(int i = 0; i < t_sentenceToGetEncrypted.length(); i++)
+        {
+
+            if (t_sentenceToGetEncrypted[i] == ' ')
+            {
+
+                spaces_index[count] = i;
+                count++;
+
+            }
+        }
+    
+        // to remove char from string 
+    t_sentenceToGetEncrypted.erase(remove(t_sentenceToGetEncrypted.begin(),t_sentenceToGetEncrypted.end(), 32), t_sentenceToGetEncrypted.end());
 
 
 
 
+    // convert string into upper case
+    for(auto &c : t_sentenceToGetEncrypted) c = toupper(c);
+    string inverted_alphabet = "ZYXWVUTSRQPONMLKJIHGFEDCBA";
+    string encrypted = "";
+
+    // covert string into array of chars
+    char chars_of_message[t_sentenceToGetEncrypted.length() + 1];
+    strcpy(chars_of_message, t_sentenceToGetEncrypted.c_str());
+
+    //loop over array of chars and fech each char's position in abs
+    for (int i = 0; i < t_sentenceToGetEncrypted.length(); i++){
+        char chara = t_sentenceToGetEncrypted[i];
+        // position in Alphabet >> find
+        int position_in_Alphabet = Alphabet.find(chara);
+
+        // get the equivilant encrpted char of inverted Alphabet
+        
+        encrypted += inverted_alphabet[position_in_Alphabet];
+    }
+
+    count = 0;
+    string encryptedMessage;
+
+
+    int i = 0;
+    while (i < t_sentenceToGetEncrypted.length())
+    {
+
+        if (spaces_index[count] == encryptedMessage.length())
+        {
+            encryptedMessage += ' ';
+            count ++; 
+        }
+
+        encryptedMessage += encrypted[i];
+        i++;
+
+    }
+
+    // return the encrypted message
+    return encryptedMessage;
+}
+
+
+/**
+ * @brief The Basic Encyrpting that object uses to encrypte instance attribute
+ * @details This function is based on the overloaded version: look above
+ */
+void Encryptor::EncryptUsingAtpashCipher()
+{
+    m_EncryptedSenctence = Encryptor::EncryptUsingAtpashCipher(m_OriginalSenctence);
+}
+
+
+/**
+ * @brief This function takes a sentence from user then encrpted using Baconian cipher
+ * @details For details on affice cipher check this link: https://en.wikipedia.org/wiki/Bacon%27s_cipher
+ * @details this function doesn't deal with the instance attributes, it's an overload for the basic one 
+ * @param t_sentenceToGetEncrypted Original sentence (will be encrypted)
+ * @return string Senctenc after being encrypted (Encrypted sentence)
+ */
+string Encryptor::EncryptUsingBaconianCipher(string t_sentenceToGetEncrypted)
+{
+    // conver all letter's into upper case 
+    for(auto &c: t_sentenceToGetEncrypted) c = toupper(c); // actually this not important i could have neglect it by using full lowercase Alphabet instead of upper case one
+
+    // Alphabet >> any string is an array of buffers 
+
+    // array cipher
+    string code[26] = {"aaaaa ", "aaaab ", "aaaba ", "aaabb ", "aabaa ", "aabab ", "aabba ", "aabbb ", "abaaa ", "abaab ", "ababa ", "ababb ", "abbaa ", "abbab ", "abbba ", "abbbb ", "baaaa ", "baaab ", "baaba ", "baabb ", "babaa ", "babab ", "babba ", "babbb ", "bbaaa ", "bbaab "};
+    string encrypted;
+
+    // iteration over the message
+    for (int i = 0; i < t_sentenceToGetEncrypted.length(); ++i)
+    {
+        char chara = t_sentenceToGetEncrypted[i];
+        
+        // check if chara is space
+        if (chara == ' ')
+        {   // if chara == space append 4spaces to ecrypted one 
+
+            encrypted += "   ";
+            continue;
+        }
+        // check if the chara is digit
+        else if (isdigit(chara))
+        {
+            encrypted += chara;
+            continue;
+        }
+        else
+        {
+            // fetch it's position from Alphabet
+            int position_in_alphabet = Alphabet.find(chara);
+
+            // get the equivelant from code
+            string coded_chara = code[position_in_alphabet];
+            encrypted += coded_chara;
+        }
+    }
+    
+    // return the encrypted message
+    return encrypted;
+}
+
+
+/**
+ * @brief The Basic Encyrpting that object uses to encrypte instance attribute
+ * @details This function is based on the overloaded version: look above
+ */
+void Encryptor::EncryptUsingBaconianCipher()
+{
+    m_EncryptedSenctence = Encryptor::EncryptUsingBaconianCipher(m_OriginalSenctence);
+}
+
+
+/**
+ * @brief This function takes a sentence from user then encrpted using Caesar Cipher
+ * @details For details on affice cipher check this link: https://en.wikipedia.org/wiki/Caesar_cipher
+ * @details this function doesn't deal with the instance attributes, it's an overload for the basic one 
+ * @param t_sentenceToGetEncrypted Original sentence (will be encrypted)
+ * @return string Senctenc after being encrypted (Encrypted sentence)
+ */
+string Encryptor::EncryptUsingCaesarCipher(string t_sentenceToGetEncrypted)
+{
+    // convert all letter into upper case
+    for (auto &c : t_sentenceToGetEncrypted) c = toupper(c);
+
+    // take shift from user
+    cout << "shift: ";
+    int shift;
+    cin >> shift;
+    
+    // encrypting credentials
+    int position_in_alphabet, new_position;
+    string encrpted_message;
+    char encrypted;
+
+    // iterate over each char in original and encrypt it
+    for (int i = 0; i < t_sentenceToGetEncrypted.length(); ++i){
+        char character = t_sentenceToGetEncrypted[i];
+        if (isspace(character) || (isdigit(character)))
+        {
+            encrpted_message += character;
+            continue;
+        }
+        else
+        {
+            position_in_alphabet = Alphabet.find(character);
+            new_position = Mod((position_in_alphabet + shift), 26);
+            encrypted = Alphabet[new_position];
+            encrpted_message += encrypted;
+        }
+    }
+
+    // return the encrypted message
+    return encrpted_message;
+   
+}
+
+
+/**
+ * @brief The Basic Encyrpting that object uses to encrypte instance attribute
+ * @details This function is based on the overloaded version: look above
+ */
+void Encryptor::EncryptUsingCaesarCipher()
+{
+    m_EncryptedSenctence = Encryptor::EncryptUsingCaesarCipher(m_OriginalSenctence);
+}
+
+
+/**
+ * @brief This function takes a sentence from user then encrpted using MorseCode
+ * @details For details on affice cipher check this link: https://en.wikipedia.org/wiki/Morse_code
+ * @details this function doesn't deal with the instance attributes, it's an overload for the basic one 
+ * @param t_sentenceToGetEncrypted Original sentence (will be encrypted)
+ * @return string Senctenc after being encrypted (Encrypted sentence)
+ */
+string Encryptor::EncryptUsingMorseCode(string t_sentenceToGetEncrypted)
+{
+    // credentials
+    string morse_code[36] = {".-", "-...", "-.-.", "-..", ".", "..-.", "--.", "....", "..", ".---", "-.-", ".-..", "--", "-.", "---", ".--.", "--.-", ".-.", "...", "-", "..-", "...-", ".--", "-..-", "-.--", "--..", "-----", ".----","..---","...--","....-",".....","-....","--....","---..", "----."};
+
+    // conver all the message's letters into uppercase
+    for (auto &c : t_sentenceToGetEncrypted) c = toupper(c);
+
+    // this an empty string to concatinate
+    string encrypted = "";
+
+    // iterate over the message
+    for (int i = 0; i < t_sentenceToGetEncrypted.length(); i++)
+    {
+        // fetch character by index from the message
+        char chara = t_sentenceToGetEncrypted[i];
+
+        // if chara is space or digit append it without any configration
+        if (isspace(chara))
+        {
+            encrypted += chara;
+            continue;
+        }
+        else
+        {
+            // fetch the character's position in abc
+            int position_in_alphabet = Alphabet.find(chara);
+            // get the corresponding morse companitation thereafter concatinate it with encrypted
+            encrypted += morse_code[position_in_alphabet] + ' ';
+        }
+    }
+
+    // // display the message
+    // cout << "################################" << endl;
+    // cout << "Note: Every Letter is seperated by (one space) and Every word seperated by (Two Spaces) !! " << endl;
+    // cout << "Encrypted Message " << encrypted << endl;
+    // cout << "################################" << endl;
+
+
+    // return the encrypted message
+    return encrypted;
+
+}
+
+
+/**
+ * @brief The Basic Encyrpting that object uses to encrypte instance attribute
+ * @details This function is based on the overloaded version: look above
+ */
+void Encryptor::EncryptUsingMorseCode()
+{
+    m_EncryptedSenctence = Encryptor::EncryptUsingMorseCode(m_OriginalSenctence);
+}
+
+
+/**
+ * @brief This function takes a sentence from user then encrpted using Simple Substitution Cipher
+ * @details For details on affice cipher check this link: https://en.wikipedia.org/wiki/Substitution_cipher
+ * @details this function doesn't deal with the instance attributes, it's an overload for the basic one 
+ * @param t_sentenceToGetEncrypted Original sentence (will be encrypted)
+ * @return string Senctenc after being encrypted (Encrypted sentence)
+ */
+string Encryptor::EncryptUsingSimpleSubstitutionCipher(string t_sentenceToGetEncrypted)
+{
+    // convert the message into uppercase
+    for (auto &c : t_sentenceToGetEncrypted) c = toupper(c);
+
+    // take the key
+    cout << "key: ";
+    string key;
+    getline(cin >> ws, key);
+
+    // convert key into uppercase
+    for (auto &c : key) c = toupper(c);
+
+    string modified_alphabet = "";
+
+    // add the key letter's to the beggining of the modified abc
+    for (int i = 0; i < key.length(); ++i)
+    {
+        modified_alphabet += key[i];
+    }
+
+    ModifyAlphabet(modified_alphabet, Alphabet, key);
+    string encrypted = "";
+    // iterate over the message and encrypt
+    for (int i = 0; i < t_sentenceToGetEncrypted.length(); ++i)
+    {
+        char chara = t_sentenceToGetEncrypted[i];
+
+        // if the chara existing in the message is space or digit append it without any modification
+        if ((chara == ' ') || (isdigit(chara)))
+        {
+            encrypted += chara;
+            continue;
+        }
+
+        // if not then encrypt the chara
+        else
+        {
+            int position_in_alphabet = Alphabet.find(chara);
+            char new_chara = modified_alphabet[position_in_alphabet];
+            encrypted += new_chara;
+        }
+    }
+
+    // return the encrypted message
+    return encrypted;
+
+}
+
+
+/**
+ * @brief The Basic Encyrpting that object uses to encrypte instance attribute
+ * @details This function is based on the overloaded version: look above
+ */
+void Encryptor::EncryptUsingSimpleSubstitutionCipher()
+{
+    m_EncryptedSenctence = Encryptor::EncryptUsingSimpleSubstitutionCipher(m_OriginalSenctence);
+}
+
+
+/**
+ * @brief This function takes a sentence from user then encrpted using MorseCode
+ * @details For details on affice cipher check this link: https://en.wikipedia.org/wiki/Morse_code
+ * @details this function doesn't deal with the instance attributes, it's an overload for the basic one 
+ * @param t_sentenceToGetEncrypted Original sentence (will be encrypted)
+ * @return string Senctenc after being encrypted (Encrypted sentence)
+ */
+string Encryptor::EncryptUsingVignereCipher(string t_sentenceToGetEncrypted)
+{
+    // conver all the message's letters into uppercase
+    for (auto &c: t_sentenceToGetEncrypted) c = toupper(c);
+
+
+    // take the key from the user
+    cout << "Key: ";
+    string key;
+    getline(cin >> ws, key);
+
+    //conver all the key's letter into uppercase
+    for (auto &c: key) c = toupper(c);
+    
+
+    int count = 0;
+    string repted_key;
+
+    for (int i = 0; i < t_sentenceToGetEncrypted.length(); ++i)
+    {
+        if (count > key.length() - 1)
+        {
+            count = Mod(count, key.length());
+        }
+
+        char chara = key[count];
+        repted_key += chara;
+        count ++;
+
+    }
+
+
+    // encrypting credentials
+    string encrypted = "";
+    int ascii_of_a = int(Alphabet[0]);
+    char chara_from_message, chara_from_repted, new_chara;
+    int ascii_of_chara_repetd, ascii_of_chara_message;
+
+    for (int i = 0; i < t_sentenceToGetEncrypted.length(); ++i)
+    {
+        // note that both of message and repted key have the same length
+        
+
+        chara_from_message = t_sentenceToGetEncrypted[i];
+        if (chara_from_message == ' ')
+        {
+            encrypted += ' ';
+            continue;
+        }
+        else if (isdigit(chara_from_message))
+        {
+            encrypted += chara_from_message;
+            continue;
+        }
+
+        ascii_of_chara_message = int(chara_from_message);
+
+        chara_from_repted = repted_key[i];
+        ascii_of_chara_repetd = int(chara_from_repted);
+        
+        new_chara = ascii_of_a +  (Mod((ascii_of_chara_message + ascii_of_chara_repetd), 26));
+        encrypted += new_chara;
+    }
+
+    // return the encrypted message
+    return encrypted;
+
+}
+
+
+/**
+ * @brief The Basic Encyrpting that object uses to encrypte instance attribute
+ * @details This function is based on the overloaded version: look above
+ */
+void Encryptor::EncryptUsingVignereCipher()
+{
+    m_EncryptedSenctence = Encryptor::EncryptUsingVignereCipher(m_OriginalSenctence);
+}
+
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+														/* (Helper Functions ) */
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+/**
+ * @brief 
+ * 
+ * @param a 
+ * @param b 
+ * @return long 
+ */
+long Encryptor::Mod(int a, int b){ return (a%b + b) % b; }
+
+
+/**
+ * @brief 
+ * 
+ * @param t_modifiedAlphabet 
+ * @param t_alphabet 
+ * @param t_key 
+ */
+void Encryptor::ModifyAlphabet(string &t_modifiedAlphabet, string t_alphabet, string &t_key)
+{
+  // first loop to fetch each char from abc
+    for (int i = 0; i < t_alphabet.length(); ++i)
+    {
+        bool exist_in_key = false;
+        char chara = t_alphabet[i];
+
+        // nested loop for comparing chara fetched from abc with the key
+        for (int x = 0; x < t_key.length(); ++x)
+        {
+            if (chara == t_key[x])
+            {
+                // if chara from abc in key
+                exist_in_key = true;
+            }
+        }
+
+        if (exist_in_key)
+        {
+            // if in the key then neglect it
+            continue;
+        }
+
+        else
+        {
+            t_modifiedAlphabet += chara;
+        }
+    }
+}
