@@ -11,6 +11,9 @@
 #pragma once
 #include <iostream>
 #include <string>
+#include <limits>
+#include <cstring>
+#include <algorithm>
 using namespace std;
 
 
@@ -78,5 +81,13 @@ public:
     /* Static Methods (Related To Class only) */
     static int GetTotalNumberOfEncryptorsThisClassMade();
     static int GetTotalNumberOfTheAliveEncryptors();
+
+
+    /* Helper functions */
+private:
+    long Mod(int a, int b);
+    void ModifyAlphabet(string &t_modifiedAlphabet, string t_alphabet, string &t_key);
+
+
 };
 
