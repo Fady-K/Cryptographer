@@ -23,7 +23,7 @@
 int Encryptor::m_NoEncryptors = 0;
 
 /**
- * @brief Int static variable indicating to the number of the current encryptor (life time hasn't ended yet)
+ * @brief Int static variable indicating to the number of the current Encryptors (life time hasn't ended yet)
  */
 int Encryptor::m_NoCurrentEncyptors = 0;
 
@@ -31,9 +31,17 @@ int Encryptor::m_NoCurrentEncyptors = 0;
 /**
  * @brief This funtion returns the total number of encrptor were instantiated from this class
  * 
- * @return int No.Encryptor
+ * @return int No.Encryptors
  */
-int Encryptor::GetTotalNumberOfEncryptorThisClassMade(){ return m_NoEncryptors; }
+int Encryptor::GetTotalNumberOfEncryptorsThisClassMade(){ return m_NoEncryptors; }
+
+
+/**
+ * @brief  This funtion returns the total number of the alive Encryptors were (their life time hasn't ended yet)
+ * 
+ * @return int number of the alive encryptors
+ */
+int Encryptor::GetTotalNumberOfTheAliveEncryptors(){return m_NoCurrentEncyptors; }
 
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -109,3 +117,47 @@ Encryptor::~Encryptor()
     // decrement the current number of life encryptors by one as this has just died
     m_NoCurrentEncyptors --;
 }
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+														/* (Instance Methods (Setters and Getters) */
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+/**
+ * @brief A Setter method for m_OriginalSentence (instance attribute)
+ * 
+ * @param t_senctence A sentence to get encrpted
+ */
+inline void Encryptor::SetSentenceToEncrypt(string t_senctence) { m_OriginalSenctence = t_senctence; }
+
+
+/**
+ * @brief A Getter method for m_OriginalSentence (instance attribute)
+ * 
+ * @return string The Current value of m_OriginalSentence
+ */
+inline string Encryptor::GetOriginalSenctence() { return m_OriginalSenctence; }
+
+
+/**
+ * @brief A Getter method to return the current value of m_EncryptedSentence (instance attribute)
+ * 
+ * @return string Value of m_EncryptedSenctence
+ */
+inline string Encryptor::GetEncryptedSentence() { return m_EncryptedSenctence; }
+
+
+/**
+ * @brief 
+ * 
+ * @return true 
+ * @return false 
+ */
+inline bool Encryptor::IsSentenceGotEncrpyted() { return m_IsEncrypted; }
+
+
+
+
+
+
