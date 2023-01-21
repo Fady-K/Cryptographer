@@ -57,6 +57,10 @@ Encryptor::Encryptor(): m_OriginalSenctence(""), m_EncryptedSenctence("None"), m
     // increment number of encryptors by one
     Encryptor::m_NoEncryptors ++;
     Encryptor::m_NoCurrentEncyptors ++;
+
+    // encryptor id is comprisd of the prefix ENC+NoEncryptors
+    m_Id = Encryptor::GenerateId(Encryptor::m_NoEncryptors);
+
 }
 
 
@@ -70,6 +74,11 @@ Encryptor::Encryptor(string t_sentence): m_OriginalSenctence(t_sentence), m_Encr
     // increment number of encryptors by one
     Encryptor::m_NoEncryptors ++;
     Encryptor::m_NoCurrentEncyptors ++;
+
+    // encryptor id is comprisd of the prefix ENC+NoEncryptors
+    m_Id = Encryptor::GenerateId(Encryptor::m_NoEncryptors);
+    
+
 }
 
 
@@ -83,6 +92,9 @@ Encryptor::Encryptor(const Encryptor& t_anotherEncryptor): m_OriginalSenctence(t
     // increment number of encryptors by one
     Encryptor::m_NoEncryptors ++;
     Encryptor::m_NoCurrentEncyptors ++;
+
+    // encryptor id is comprisd of the prefix ENC+NoEncryptors
+    m_Id = Encryptor::GenerateId(Encryptor::m_NoEncryptors);
 }
 
 
@@ -154,6 +166,14 @@ inline string Encryptor::GetEncryptedSentence() const { return m_EncryptedSencte
  * @return string Value of m_UsedCipher
  */
 inline string Encryptor::GetUsedCipher() const {return m_UsedCipher; }
+
+
+/**
+ * @brief A Getter method to return the this encryptor id (instance attribute)
+ * 
+ * @return string Value of m_Id
+ */
+inline string Encryptor::GetId() const {return m_Id; }
 
 
 /**
@@ -399,7 +419,7 @@ void Encryptor::EncryptUsingBaconianCipher()
 
 /**
  * @brief This function takes a sentence from user then encrypts it using Caesar Cipher
- * @details For details on affice cipher check this link: https://en.wikipedia.org/wiki/Caesar_cipher
+ * @details For a more details about caesar cipher check this link: https://en.wikipedia.org/wiki/Caesar_cipher
  * @details this function doesn't deal with the instance attributes, it's an overload for the basic one 
  * @param t_sentenceToGetEncrypted Original sentence (will be encrypted)
  * @return string Senctenc after being encrypted (Encrypted sentence)
@@ -579,7 +599,6 @@ string Encryptor::EncryptUsingSimpleSubstitutionCipher(string t_sentenceToGetEnc
 
     // return the encrypted message
     return encrypted;
-
 }
 
 
@@ -634,7 +653,6 @@ string Encryptor::EncryptUsingVignereCipher(string t_sentenceToGetEncrypted) con
         char chara = key[count];
         repted_key += chara;
         count ++;
-
     }
 
 
@@ -785,4 +803,56 @@ void Encryptor::ModifyAlphabet(string &t_modifiedAlphabet, string t_alphabet, st
             t_modifiedAlphabet += chara;
         }
     }
+}
+
+
+/**
+ * @brief 
+ * 
+ * @param currentNumberOfEncryptors 
+ * @return string 
+ */
+string Encryptor::GenerateId(int totalNumberOfEncryptors)
+{
+    /* formula: EN-CurrentNumberOfEncryptors */
+
+    // string to hold the answer
+    string id = "";
+
+    // add prefix En- to it
+    id += "ENC-";
+
+    // calcualte nDigitsInNumberOfEncryptors thanks to https://www.geeksforgeeks.org/program-count-digits-integer-3-different-methods/
+    int nDigitsInNumberOfEncryptors = floor(log10(totalNumberOfEncryptors) + 1);
+
+    // if number of encryptor has one digit then 00 + it
+    if (nDigitsInNumberOfEncryptors == 1)
+    {
+        // add leading zeros
+        id += "00";
+
+        // convret current number of encryptos into string and append to id
+        id += ('0' + totalNumberOfEncryptors);
+    }
+    else if (nDigitsInNumberOfEncryptors == 2)
+    {
+        // add one leading zero
+        id += "0";
+
+        // convret current number of encryptos into string and append to id
+        id += to_string(totalNumberOfEncryptors);
+    }
+    else
+    {
+        // convret current number of encryptos into string and append to id
+        id += to_string(totalNumberOfEncryptors);
+    }
+
+
+    // return id
+    return id;
+    
+
+    
+
 }
