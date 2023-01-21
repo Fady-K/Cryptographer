@@ -17,10 +17,6 @@
 using namespace std;
 
 
-/**
- * @brief Encryptor class
- */
-
 class Encryptor
 {
     /* Instance Attributes  */
@@ -38,7 +34,13 @@ protected:
     /* Big 5 InAddition to (parametrized constructors) */
 public:
     Encryptor();                                // Default constructor
-    Encryptor(string t_sentence);              // Parametrized constructor
+
+    /**
+     * @brief Construct a new Encryptor:: Encryptor object
+     * @details This a parametrized constructor that initailzes the class member (m_OriginalSentence) with a given sentence to encrypt
+     * @param t_sentence A given sentence desired to get encrypted via encryptor object
+     */
+    Encryptor(string t_sentence);               // Parametrized constructor
     Encryptor(const Encryptor &);               // Copy constructor
     Encryptor& operator= (const Encryptor &);   // Copy assignment operator
     // Encryptor(Encryptor &&);                    // Move costructor

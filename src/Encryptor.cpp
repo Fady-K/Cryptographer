@@ -51,7 +51,6 @@ int Encryptor::GetTotalNumberOfTheAliveEncryptors(){return m_NoCurrentEncyptors;
 /**
  * @brief Construct a new Encryptor:: Encryptor object
  * @details This is the default constructor, It initailzes instance attributes with values were determined by class maker 
- * 
  */
 Encryptor::Encryptor(): m_OriginalSenctence(""), m_IsEncrypted(false)                           // Default constructor
 {
@@ -220,7 +219,11 @@ string Encryptor::EncryptUsingAffineCipher(string t_sentenceToGetEncrypted)
  */
 void Encryptor::EncryptUsingAffineCipher()
 {
+    // dry
     m_EncryptedSenctence = Encryptor::EncryptUsingAffineCipher(m_OriginalSenctence);
+
+    // senctence has been encrypted
+    m_IsEncrypted = true;
 }
 
 
@@ -307,6 +310,9 @@ string Encryptor::EncryptUsingAtpashCipher(string t_sentenceToGetEncrypted)
 void Encryptor::EncryptUsingAtpashCipher()
 {
     m_EncryptedSenctence = Encryptor::EncryptUsingAtpashCipher(m_OriginalSenctence);
+
+    // senctence has been encrypted
+    m_IsEncrypted = true;
 }
 
 
@@ -369,6 +375,9 @@ string Encryptor::EncryptUsingBaconianCipher(string t_sentenceToGetEncrypted)
 void Encryptor::EncryptUsingBaconianCipher()
 {
     m_EncryptedSenctence = Encryptor::EncryptUsingBaconianCipher(m_OriginalSenctence);
+
+    // senctence has been encrypted
+    m_IsEncrypted = true;
 }
 
 
@@ -424,6 +433,9 @@ string Encryptor::EncryptUsingCaesarCipher(string t_sentenceToGetEncrypted)
 void Encryptor::EncryptUsingCaesarCipher()
 {
     m_EncryptedSenctence = Encryptor::EncryptUsingCaesarCipher(m_OriginalSenctence);
+
+    // senctence has been encrypted
+    m_IsEncrypted = true;
 }
 
 
@@ -486,6 +498,9 @@ string Encryptor::EncryptUsingMorseCode(string t_sentenceToGetEncrypted)
 void Encryptor::EncryptUsingMorseCode()
 {
     m_EncryptedSenctence = Encryptor::EncryptUsingMorseCode(m_OriginalSenctence);
+
+    // senctence has been encrypted
+    m_IsEncrypted = true;
 }
 
 
@@ -553,6 +568,9 @@ string Encryptor::EncryptUsingSimpleSubstitutionCipher(string t_sentenceToGetEnc
 void Encryptor::EncryptUsingSimpleSubstitutionCipher()
 {
     m_EncryptedSenctence = Encryptor::EncryptUsingSimpleSubstitutionCipher(m_OriginalSenctence);
+
+    // senctence has been encrypted
+    m_IsEncrypted = true;
 }
 
 
@@ -640,6 +658,9 @@ string Encryptor::EncryptUsingVignereCipher(string t_sentenceToGetEncrypted)
 void Encryptor::EncryptUsingVignereCipher()
 {
     m_EncryptedSenctence = Encryptor::EncryptUsingVignereCipher(m_OriginalSenctence);
+
+    // senctence has been encrypted
+    m_IsEncrypted = true;
 }
 
 
