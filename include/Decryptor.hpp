@@ -9,7 +9,12 @@
  * 
  */
 #pragma once
-#include <bits/stdc++.h>
+#include <iostream>
+#include <string>
+#include <limits>
+#include <cstring>
+#include <algorithm>
+#include <cmath>
 using namespace std;
 
 
@@ -46,7 +51,7 @@ public:
     string GetDecryptedSentence();
     string GetUsedCipher();
     string GetId();
-    bool IsGivenSentenceGotDecrypted():
+    bool IsGivenSentenceGotDecrypted();
 
 
     /* Ciphers */
@@ -74,9 +79,9 @@ public:
 
 
     /* Static Methods (Related to class only, have no relation with any object) */
-    static string GetTotalNumberOfDecryptorThisClassMade();
-    static string GetTotalNumberOfTheAliveDecryptors();
-    static string GenerateId(string currentDecryporsCount);
+    static int GetTotalNumberOfDecryptorThisClassMade();
+    static int GetTotalNumberOfTheAliveDecryptors();
+    static string GenerateId(int currentDecryptorsCount);
 
 
     /* Helper Functions */
