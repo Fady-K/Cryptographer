@@ -15,6 +15,7 @@
 #include <cstring>
 #include <algorithm>
 #include <cmath>
+#include "Exceptions/EncryptorExceptions.hpp"
 using namespace std;
 
 
@@ -89,7 +90,7 @@ public:
 
 
     /* Helper functions */
-public:
+private:
     long Mod(int a, int b) const;
     void ModifyAlphabet(string &t_modifiedAlphabet, string t_alphabet, string &t_key) const;
 };
