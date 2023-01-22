@@ -581,8 +581,33 @@ void Decryptor::DecryptUsingSimpleSubstitutionCipher()
 }
 
 
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+														/* Operators Overloading (Bitwise) */
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+istream& operator>> (istream& input, Decryptor& decryptor)
+{
+    // string to store the value
+    string s;
+    getline(input >> ws, s);
+
+    // set the taken s
+    decryptor.SetSenctenceToDecrypt(s);
+    
+    // return istream incase there were more than one >>
+    return input;
+}
 
 
+ostream& operator<< (ostream& output, const Decryptor& decryptor)
+{
+    // print the decryptor
+    output << "---- Decryptor Details ----\n";
+    output << "Id: " << decryptor.GetId() << "\n" << "Original Sentence ( Undencrypted ): " << decryptor.GetOriginalSentence() << "\n" << "Decrypted Senctence: " << decryptor.GetDecryptedSentence() << "\n" << "Used Cipher: " << decryptor.GetUsedCipher() << "\n";
+
+    // return refrence to ostream (incase there is more than one << )
+    return output;
+}
 
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
