@@ -80,6 +80,11 @@ public:
     // void DecryptUsingVignereCipher();
 
 
+    /* Operator Overloading (Bitwise) */
+    friend istream& operator>> (istream& input, Decryptor& decryptor);
+    friend ostream& operator<< (ostream& output, const Decryptor& decryptor); 
+
+
     /* Static Methods (Related to class only, have no relation with any object) */
     static int GetTotalNumberOfDecryptorThisClassMade();
     static int GetTotalNumberOfTheAliveDecryptors();
