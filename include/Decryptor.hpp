@@ -11,10 +11,12 @@
 #pragma once
 #include <iostream>
 #include <string>
+#include <vector>
 #include <limits>
 #include <cstring>
 #include <algorithm>
 #include <cmath>
+#include <bits/stdc++.h>
 using namespace std;
 
 
@@ -39,43 +41,43 @@ public:
     Decryptor(string t_sentenc);                    // Parametrized constructor
     Decryptor(const Decryptor&);                    // Copy constructor
     Decryptor& operator= (const Decryptor&);        // Copy assignment operator
-    Decryptor(Decryptor&&);                         // Move constructor
-    Decryptor& operator= (Decryptor&&);             // Move assignment operator
+    // Decryptor(Decryptor&&);                         // Move constructor
+    // Decryptor& operator= (Decryptor&&);             // Move assignment operator
     ~Decryptor();                                   // Destructor
 
 
 
     /* Instance Methods (Setters, Getters)*/
-    void SetSenctenceToDecrypt(string t_sentence);
-    string GetOriginalSentence();
-    string GetDecryptedSentence();
-    string GetUsedCipher();
-    string GetId();
-    bool IsGivenSentenceGotDecrypted();
+    inline void SetSenctenceToDecrypt(string t_sentence);
+    inline string GetOriginalSentence() const;
+    inline string GetDecryptedSentence() const;
+    inline string GetUsedCipher() const;
+    inline string GetId() const;
+    inline bool IsGivenSentenceGotDecrypted() const;
 
 
     /* Ciphers */
-    string DecryptUsingAffineCipher(string t_sentenceToGetDecrypted);
+    string DecryptUsingAffineCipher(string t_sentenceToGetDecrypted) const;
     void DecryptUsingAffineCipher();
 
     
-    string DecryptUsingAtpashCipher(string t_sentenceToGetDecrypted);
+    string DecryptUsingAtpashCipher(string t_sentenceToGetDecrypted) const;
     void DecryptUsingAtpashCipher();
 
-    string DecryptUsingBaconianCipher(string t_sentenceToGetDecrypted);
+    string DecryptUsingBaconianCipher(string t_sentenceToGetDecrypted) const;
     void DecryptUsingBaconianCipher();
 
-    string DecryptUsingCaesarCipher(string t_sentenceToGetDecrypted);
+    string DecryptUsingCaesarCipher(string t_sentenceToGetDecrypted) const;
     void DecryptUsingCaesarCipher();
 
-    string DecryptUsingMorseCode(string t_sentenceToGetDecrypted);
+    string DecryptUsingMorseCode(string t_sentenceToGetDecrypted) const;
     void DecryptUsingMorseCode();
 
-    string DecryptUsingSimpleSubstitutionCipher(string t_sentenceToGetDecrypted);
+    string DecryptUsingSimpleSubstitutionCipher(string t_sentenceToGetDecrypted) const;
     void DecryptUsingSimpleSubstitutionCipher();
 
-    string DecryptUsingVignereCipher(string t_sentenceToGetDecrypted);
-    void DecryptUsingVignereCipher();
+    // string DecryptUsingVignereCipher(string t_sentenceToGetDecrypted) const;
+    // void DecryptUsingVignereCipher();
 
 
     /* Static Methods (Related to class only, have no relation with any object) */
@@ -86,8 +88,11 @@ public:
 
     /* Helper Functions */
 private:
-    long Mod(int a, int b);
-    string ModifyAlphabet(string &t_modifiedAlphabet, string alphabet, string t_key);
+    long Mod(int a, int b) const;
+    void ModifyAlphabet(string &t_modifiedAlphabet, string alphabet, string t_key) const;
+
+    template<typename T>
+    int GetIndex(vector<T> v, T target) const;
 
 };
 
