@@ -47,7 +47,7 @@ public:
 
 
     /* Instance Methods (Setter and Getters) */
-    inline void SetSentenceToEncrypt(string t_senctence);
+    inline void SetSentence(string t_senctence);
     inline string GetOriginalSenctence() const;
 
     inline string GetEncryptedSentence() const;
@@ -58,28 +58,26 @@ public:
 
 
     /* Ciphers */
-    string EncryptUsingAffineCipher(string t_sentenceToGetEncrypted) const;                   // Affine Cipher
-    void EncryptUsingAffineCipher();                                                    // An overloaded version to encrypt a given sentence
+    string AffineCipher(string t_sentenceToGetEncrypted) const;                   // Affine Cipher
+    void AffineCipher();                                                    // An overloaded version to encrypt a given sentence
 
-    string EncryptUsingAtpashCipher(string t_sentenceToGetEncrypted) const;
-    void EncryptUsingAtpashCipher();
+    string AtpashCipher(string t_sentenceToGetEncrypted) const;
+    void AtpashCipher();
 
-    string EncryptUsingBaconianCipher(string t_sentenceToGetEncrypted) const;
-    void EncryptUsingBaconianCipher();
+    string BaconianCipher(string t_sentenceToGetEncrypted) const;
+    void BaconianCipher();
 
-    string EncryptUsingCaesarCipher(string t_sentenceToGetEncrypted) const;
-    void EncryptUsingCaesarCipher();
+    string CaesarCipher(string t_sentenceToGetEncrypted) const;
+    void CaesarCipher();
 
-    string EncryptUsingMorseCode(string t_sentenceToGetEncrypted) const;
-    void EncryptUsingMorseCode();
+    string MorseCode(string t_sentenceToGetEncrypted) const;
+    void MorseCode();
 
-    string EncryptUsingSimpleSubstitutionCipher(string t_sentenceToGetEncrypted) const;
-    void EncryptUsingSimpleSubstitutionCipher();
+    string SimpleSubstitutionCipher(string t_sentenceToGetEncrypted) const;
+    void SimpleSubstitutionCipher();
 
-    string EncryptUsingVignereCipher(string t_sentenceToGetEncrypted) const;
-    void EncryptUsingVignereCipher();
-
-
+    string VignereCipher(string t_sentenceToGetEncrypted) const;
+    void VignereCipher();
 
 
 
