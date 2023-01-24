@@ -30,6 +30,6 @@ public:
 
 
     // override what function
-    virtual const char* what() const;
+    virtual const char* what() const noexcept;
 };
 
