@@ -20,12 +20,12 @@ const string Alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
  * @brief Int static variable indicating how many Encryptor object was instantiated from this class.
  * @details It will be incremented as soon as an object be instantaited, including objects with an ended life time.
  */
-int Encryptor::m_NoEncryptors = 0;
+int Encryptor::m_NoObjects = 0;
 
 /**
  * @brief Int static variable indicating to the number of the current Encryptors (life time hasn't ended yet)
  */
-int Encryptor::m_NoCurrentEncyptors = 0;
+int Encryptor::m_CurrentNoObjects = 0;
 
 
 /**
@@ -33,7 +33,7 @@ int Encryptor::m_NoCurrentEncyptors = 0;
  * 
  * @return int No.Encryptors
  */
-int Encryptor::GetTotalNumberOfEncryptorsThisClassMade(){ return m_NoEncryptors; }
+int Encryptor::GetTotalNumberOfEncryptorsThisClassMade(){ return m_NoObjects; }
 
 
 /**
@@ -41,7 +41,7 @@ int Encryptor::GetTotalNumberOfEncryptorsThisClassMade(){ return m_NoEncryptors;
  * 
  * @return int number of the alive encryptors
  */
-int Encryptor::GetTotalNumberOfTheAliveEncryptors(){return m_NoCurrentEncyptors; }
+int Encryptor::GetTotalNumberOfTheAliveEncryptors(){return m_CurrentNoObjects; }
 
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -55,11 +55,11 @@ int Encryptor::GetTotalNumberOfTheAliveEncryptors(){return m_NoCurrentEncyptors;
 Encryptor::Encryptor(): m_OriginalSenctence(""), m_EncryptedSenctence("None"), m_UsedCipher("None"), m_IsEncrypted(false)                           // Default constructor
 {
     // increment number of encryptors by one
-    Encryptor::m_NoEncryptors ++;
-    Encryptor::m_NoCurrentEncyptors ++;
+    Encryptor::m_NoObjects ++;
+    Encryptor::m_CurrentNoObjects ++;
 
     // encryptor id is comprisd of the prefix ENC+NoEncryptors
-    m_Id = Encryptor::GenerateId(Encryptor::m_NoEncryptors);
+    m_Id = Encryptor::GenerateId(Encryptor::m_NoObjects);
 
 }
 
@@ -72,11 +72,11 @@ Encryptor::Encryptor(): m_OriginalSenctence(""), m_EncryptedSenctence("None"), m
 Encryptor::Encryptor(string t_sentence): m_OriginalSenctence(t_sentence), m_EncryptedSenctence("None"), m_UsedCipher("None"), m_IsEncrypted(false)
 {
     // increment number of encryptors by one
-    Encryptor::m_NoEncryptors ++;
-    Encryptor::m_NoCurrentEncyptors ++;
+    Encryptor::m_NoObjects ++;
+    Encryptor::m_CurrentNoObjects ++;
 
     // encryptor id is comprisd of the prefix ENC+NoEncryptors
-    m_Id = Encryptor::GenerateId(Encryptor::m_NoEncryptors);
+    m_Id = Encryptor::GenerateId(Encryptor::m_NoObjects);
     
 
 }
@@ -90,11 +90,11 @@ Encryptor::Encryptor(string t_sentence): m_OriginalSenctence(t_sentence), m_Encr
 Encryptor::Encryptor(const Encryptor& t_anotherEncryptor): m_OriginalSenctence(t_anotherEncryptor.m_OriginalSenctence), m_UsedCipher(t_anotherEncryptor.m_UsedCipher), m_IsEncrypted( t_anotherEncryptor.m_IsEncrypted), m_EncryptedSenctence(t_anotherEncryptor.m_EncryptedSenctence)
 {
     // increment number of encryptors by one
-    Encryptor::m_NoEncryptors ++;
-    Encryptor::m_NoCurrentEncyptors ++;
+    Encryptor::m_NoObjects ++;
+    Encryptor::m_CurrentNoObjects ++;
 
     // encryptor id is comprisd of the prefix ENC+NoEncryptors
-    m_Id = Encryptor::GenerateId(Encryptor::m_NoEncryptors);
+    m_Id = Encryptor::GenerateId(Encryptor::m_NoObjects);
 }
 
 
@@ -127,7 +127,7 @@ Encryptor& Encryptor::operator=(const Encryptor& t_anotherEncryptor)
 Encryptor::~Encryptor()
 {
     // decrement the current number of life encryptors by one as this has just died
-    m_NoCurrentEncyptors --;
+    m_CurrentNoObjects --;
 }
 
 

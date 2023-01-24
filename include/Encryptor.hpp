@@ -31,8 +31,8 @@ protected:
     
 
     /* Static Attributes (Related to the class only (has no relation with any object) */
-    static int m_NoEncryptors;
-    static int m_NoCurrentEncyptors;
+    static int m_NoObjects;
+    static int m_CurrentNoObjects;
 
 
     /* Big 5 InAddition to (parametrized constructors) */
