@@ -21,7 +21,7 @@ int main()
 
 
 
-    cout << Encryptor::GetTotalNumberOfEncryptorThisClassMade() << endl;
+    cout << Encryptor::GetTotalNumberOfEncryptorsThisClassMade() << endl;
 
     return 0;
 }
