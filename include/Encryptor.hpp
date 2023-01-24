@@ -58,26 +58,26 @@ public:
 
 
     /* Ciphers */
-    string AffineCipher(string t_sentenceToGetEncrypted) const;                   // Affine Cipher
-    void AffineCipher();                                                    // An overloaded version to encrypt a given sentence
+    virtual string AffineCipher(string t_sentenceToGetEncrypted) const;                   // Affine Cipher
+    virtual void AffineCipher();                                                    // An overloaded version to encrypt a given sentence
 
-    string AtpashCipher(string t_sentenceToGetEncrypted) const;
-    void AtpashCipher();
+    virtual string AtpashCipher(string t_sentenceToGetEncrypted) const;
+    virtual void AtpashCipher();
 
-    string BaconianCipher(string t_sentenceToGetEncrypted) const;
-    void BaconianCipher();
+    virtual string BaconianCipher(string t_sentenceToGetEncrypted) const;
+    virtual void BaconianCipher();
 
-    string CaesarCipher(string t_sentenceToGetEncrypted) const;
-    void CaesarCipher();
+    virtual string CaesarCipher(string t_sentenceToGetEncrypted) const;
+    virtual void CaesarCipher();
 
-    string MorseCode(string t_sentenceToGetEncrypted) const;
-    void MorseCode();
+    virtual string MorseCode(string t_sentenceToGetEncrypted) const;
+    virtual void MorseCode();
 
-    string SimpleSubstitutionCipher(string t_sentenceToGetEncrypted) const;
-    void SimpleSubstitutionCipher();
+    virtual string SimpleSubstitutionCipher(string t_sentenceToGetEncrypted) const;
+    virtual void SimpleSubstitutionCipher();
 
-    string VignereCipher(string t_sentenceToGetEncrypted) const;
-    void VignereCipher();
+    virtual string VignereCipher(string t_sentenceToGetEncrypted) const;
+    virtual void VignereCipher();
 
 
 
