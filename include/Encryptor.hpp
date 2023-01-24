@@ -84,8 +84,8 @@ public:
 
 
     /* Static Methods (Related To Class only) */
-    static int GetTotalNumberOfEncryptorsThisClassMade();
-    static int GetTotalNumberOfTheAliveEncryptors();
+    static int GetTotalNumberOfObjectsThisClassMade();
+    static int GetTotalNumberOfAliveObjects();
     static string GenerateId(int totalNumberOfEncryptors); 
 
 
