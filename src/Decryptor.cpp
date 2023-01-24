@@ -168,7 +168,11 @@ Decryptor& Decryptor::operator= (const Decryptor& t_anotherDecryptor)
  * @brief Destroy the Decryptor:: Decryptor object
  * 
  */
-Decryptor::~Decryptor(){}
+Decryptor::~Decryptor()
+{
+    // decrement the current number of life decryptors by one as this has just died
+    m_NoCurrentDecryptors --;
+}
 
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
