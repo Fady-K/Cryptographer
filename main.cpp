@@ -52,5 +52,7 @@ int main()
     // show 
     cout << d.GetDecryptedSentence() << endl;
 
+    cout << d << endl;
+
     return 0;
 }
