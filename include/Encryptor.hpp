@@ -84,7 +84,7 @@ public:
     /* Static Methods (Related To Class only) */
     static int GetTotalNumberOfObjectsThisClassMade();
     static int GetTotalNumberOfAliveObjects();
-    static string GenerateId(int totalNumberOfEncryptors); 
+    static string GenerateId(int totalNumberOfEncryptors, bool forEncryptor=true); 
 
 
     /* Helper functions */

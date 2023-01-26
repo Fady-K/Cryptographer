@@ -812,7 +812,7 @@ void Encryptor::ModifyAlphabet(string &t_modifiedAlphabet, string t_alphabet, st
  * @param currentNumberOfEncryptors 
  * @return string 
  */
-string Encryptor::GenerateId(int totalNumberOfEncryptors)
+string Encryptor::GenerateId(int totalNumberOfEncryptors, bool forEncryptor)
 {
     /* formula: EN-CurrentNumberOfEncryptors */
 
@@ -820,7 +820,8 @@ string Encryptor::GenerateId(int totalNumberOfEncryptors)
     string id = "";
 
     // add prefix En- to it
-    id += "ENC-";
+    if (forEncryptor) id += "ENC-";
+    else id += "Dec-";
 
     // calcualte nDigitsInNumberOfEncryptors thanks to https://www.geeksforgeeks.org/program-count-digits-integer-3-different-methods/
     int nDigitsInNumberOfEncryptors = floor(log10(totalNumberOfEncryptors) + 1);
