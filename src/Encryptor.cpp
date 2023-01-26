@@ -821,7 +821,7 @@ string Encryptor::GenerateId(int totalNumberOfEncryptors, bool forEncryptor)
 
     // add prefix En- to it
     if (forEncryptor) id += "ENC-";
-    else id += "Dec-";
+    else id += "DEC-";
 
     // calcualte nDigitsInNumberOfEncryptors thanks to https://www.geeksforgeeks.org/program-count-digits-integer-3-different-methods/
     int nDigitsInNumberOfEncryptors = floor(log10(totalNumberOfEncryptors) + 1);
