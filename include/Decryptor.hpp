@@ -71,9 +71,9 @@ public:
     // virtual void VignereCipher();
 
 
-    // /* Operators Overloading ( bitwise )*/
-    // friend istream& operator>> (istream& input, Decryptor& decryptor);          // Inertion operator >>
-    // friend ostream& operator<< (ostream& output, const Decryptor& decryptor);   // Extraction operator <<
+    /* Operators Overloading ( bitwise )*/
+    friend istream& operator>> (istream& input, Decryptor& decryptor);          // Inertion operator >>
+    friend ostream& operator<< (ostream& output, const Decryptor& decryptor);   // Extraction operator <<
 
 
 

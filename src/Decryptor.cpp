@@ -125,6 +125,13 @@ bool Decryptor::IsSentenceGotDecrypted() const { return m_IsDecrypted; }
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
+/**
+ * @brief this function decrypt a message was decrypted using affine cipher
+ * @details Decryption formula ((i * n) + 1) / a;
+ * @a thanks to https://www.geeksforgeeks.org/implementation-affine-cipher/
+ * @param t_sentence encrypted sentence
+ * @return string decrypted sentence
+ */
 string Decryptor::AffineCipher(string t_sentence) const 
 {
     cout << "Enter The value of (c, b) Where c / (y - b) % 26 Is The Formula of Decryption: ";
@@ -513,6 +520,48 @@ void Decryptor::SimpleSubstitutionCipher()
 }
 
 
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+														/* Operatos Overloading (bitwise) (compile time polymorshism) */
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+/**
+ * @brief 
+ * 
+ * @param input 
+ * @param decryptor 
+ * @return istream& 
+ */
+istream& operator>>(istream& input, Decryptor& decryptor)
+{
+    // take sentence to get decrypted
+    string s;
+    input >> s;
+
+    // set this s
+    decryptor.SetSentence(s);
+
+    return input;
+}
+
+
+/**
+ * @brief 
+ * 
+ * @param output 
+ * @param decryptor 
+ * @return ostream& 
+ */
+ostream& operator<<(ostream& output, const Decryptor& decryptor)
+{
+    // print the encrpytor
+    output << "---- Decryptor Details ----\n";
+    output << "Original Sentence ( Undecrypted ): " << decryptor.GetOriginalSenctence() << "\n" << "Decrypted Senctence: " << decryptor.GetDecryptedSentence() << "\n" << "Used Cipher: " << decryptor.GetUsedCipher() << "\n";
+
+    // return ostream& incase there are more than one <<
+    return output;
+
+}
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 														/* Helper Functions */
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
