@@ -1,6 +1,6 @@
 /**
  * @file Decryptor.hpp
- * @author your name (you@domain.com)
+ * @author Fady Kamal (popfadykamal151617@gmail.com)
  * @brief 
  * @version 0.1
  * @date 2023-01-24
@@ -71,8 +71,8 @@ public:
     // virtual void VignereCipher();
 
 
-    /* Operators Overloading ( bitwise )*/
-    friend istream& operator>> (istream& input, Decryptor& decryptor);          // Inertion operator >>
+    /* Operators Overloading ( bitwise )  ( Compile Time Polymorphism)*/
+    friend istream& operator>> (istream& input, Decryptor& decryptor);          // Insertion operator >>
     friend ostream& operator<< (ostream& output, const Decryptor& decryptor);   // Extraction operator <<
 
 
