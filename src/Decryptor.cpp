@@ -132,38 +132,38 @@ string Decryptor::AffineCipher(string t_sentence) const
     cin >> c >> b;
 
 
-    // convert all the t_sentence's letters into uppercase
-    for (auto &c : t_sentence) c = toupper(c);
-    
-    string decrypted;
-    char chara;
-    int position_in_abc;
-    int new_position;
-    // for each chara in t_sentence
-    for (int i = 0; i < t_sentence.length(); ++i)
+    string decrypted = "";
+    int a_inv = 0;
+    int flag = 0;
+     
+    //Find a^-1 (the multiplicative inverse of a
+        //in the group of integers modulo m.)
+    for (int i = 0; i < 26; i++)
     {
-        chara = t_sentence[i];
-        if (chara == ' ')
+        flag = (c * i) % 26;
+         
+        //Check if (a*i)%26 == 1,
+                //then i will be the multiplicative inverse of a
+        if (flag == 1)
         {
-            decrypted += " ";
-            continue;
-
-        }
-        else
-        { 
-
-            position_in_abc = abc.find(chara);
-            // utilizatin of mod_for_all function >> incase the outcome of the decypting formula is negative 
-            new_position = Mod((c / (position_in_abc - b)), 26);
-            char new_chara = abc[new_position];
-            decrypted += new_chara;
-
+            a_inv = i;
         }
     }
-
-    // return the decrypted t_sentenceToGetDecrypted
+    for (int i = 0; i < t_sentence.length(); i++)
+    {
+        if(t_sentence[i]!=' ')
+            /*Applying decryption formula a^-1 ( x - b ) mod m
+            {here x is t_sentence[i] and m is 26} and added 'A'
+            to bring it in range of ASCII alphabet[ 65-90 | A-Z ] */
+            decrypted = decrypted +
+                       (char) (((a_inv * ((t_sentence[i]+'A' - b)) % 26)) + 'A');
+        else
+            //else simply append space character
+            decrypted += t_sentence[i];
+    }
+ 
+    // return the decrypted message
     return decrypted;
-
 }
 
 
