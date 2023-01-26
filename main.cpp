@@ -31,6 +31,7 @@ int main()
         Decryptor d2("herafsd f");
     }
 
+    cout << Encryptor::GetTotalNumberOfEncryptorsThisClassMade() << endl;
 
     return 0;
 }
