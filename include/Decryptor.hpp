@@ -21,7 +21,7 @@
 class Decryptor: public Encryptor 
 {
     /* Instance Attributes (Local Attributes ) */
-protected: 
+protected:
     string m_DecryptedSentence;
     bool m_IsDecrypted;
 

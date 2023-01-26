@@ -43,6 +43,9 @@ Decryptor::Decryptor(): Encryptor::Encryptor(), m_DecryptedSentence("None"), m_I
     // increament decryptors by one 
     Decryptor::m_TotalNoDecryptors ++;
     Decryptor::m_CurrentNoDecryptors ++;
+
+    // decryptor id is comprisd of the prefix Dec+NoDecryptors
+    m_Id = Encryptor::GenerateId(Decryptor::m_TotalNoDecryptors, false);
 }
 
 
@@ -60,6 +63,9 @@ Decryptor::Decryptor(string t_sentence): Encryptor::Encryptor(t_sentence), m_Dec
     // increament decryptors by one 
     Decryptor::m_TotalNoDecryptors ++;
     Decryptor::m_CurrentNoDecryptors ++;
+
+    // decryptor id is comprisd of the prefix Dec+NoDecryptors
+    m_Id = Encryptor::GenerateId(Decryptor::m_TotalNoDecryptors, false);
 }
 
 
@@ -73,6 +79,9 @@ Decryptor::Decryptor(const Decryptor& t_decryptor): m_DecryptedSentence(t_decryp
     // increament decryptors by one 
     Decryptor::m_TotalNoDecryptors ++;
     Decryptor::m_CurrentNoDecryptors ++;
+
+    // decryptor id is comprisd of the prefix Dec+NoDecryptors
+    m_Id = Encryptor::GenerateId(Decryptor::m_TotalNoDecryptors, false);
 }
 
 
@@ -556,7 +565,7 @@ ostream& operator<<(ostream& output, const Decryptor& decryptor)
 {
     // print the encrpytor
     output << "---- Decryptor Details ----\n";
-    output << "Original Sentence ( Undecrypted ): " << decryptor.GetOriginalSenctence() << "\n" << "Decrypted Senctence: " << decryptor.GetDecryptedSentence() << "\n" << "Used Cipher: " << decryptor.GetUsedCipher() << "\n";
+    output << "Id: "<< decryptor.GetId() << "\n" <<"Original Sentence ( Undecrypted ): " << decryptor.GetOriginalSenctence() << "\n" << "Decrypted Senctence: " << decryptor.GetDecryptedSentence() << "\n" << "Used Cipher: " << decryptor.GetUsedCipher() << "\n";
 
     // return ostream& incase there are more than one <<
     return output;
