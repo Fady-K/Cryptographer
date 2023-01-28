@@ -197,13 +197,8 @@ inline bool Encryptor::IsSentenceGotEncrpyted() const { return m_IsEncrypted; }
  * @param t_sentenceToGetEncrypted Original sentence (will be encrypted)
  * @return string Senctenc after being encrypted (Encrypted sentence)
  */
-string Encryptor::AffineCipher (string t_sentenceToGetEncrypted) const
+string Encryptor::AffineCipher (string t_sentenceToGetEncrypted, const int& a, const int& b) const
 {
-    // take a, b, c from the user 
-    cout << "Enter The value of (a, b) Where (a*x + b) % 26 Is The Formula of Encryption: ";
-    int a, b;
-    cin >> a >> b;
-
     // convert all the message's letters into uppercase
     for (auto &c: t_sentenceToGetEncrypted) c = toupper(c);
     
@@ -246,10 +241,10 @@ string Encryptor::AffineCipher (string t_sentenceToGetEncrypted) const
  * @brief The Basic Encyrpting that object uses to encrypte instance attribute
  * @details This function is based on the overloaded version: look above
  */
-void Encryptor::AffineCipher()
+void Encryptor::AffineCipher(const int& a, const int& b)
 {
     // dry
-    m_EncryptedSenctence = Encryptor::AffineCipher(m_OriginalSenctence);
+    m_EncryptedSenctence = Encryptor::AffineCipher(m_OriginalSenctence, a, b);
 
     // cipher used in encryption process: affine cipher
     m_UsedCipher = "Affine Cipher";
@@ -361,8 +356,6 @@ string Encryptor::BaconianCipher(string t_sentenceToGetEncrypted) const
     // conver all letter's into upper case 
     for(auto &c: t_sentenceToGetEncrypted) c = toupper(c); // actually this not important i could have neglect it by using full lowercase Alphabet instead of upper case one
 
-    // Alphabet >> any string is an array of buffers 
-
     // array cipher
     string code[26] = {"aaaaa ", "aaaab ", "aaaba ", "aaabb ", "aabaa ", "aabab ", "aabba ", "aabbb ", "abaaa ", "abaab ", "ababa ", "ababb ", "abbaa ", "abbab ", "abbba ", "abbbb ", "baaaa ", "baaab ", "baaba ", "baabb ", "babaa ", "babab ", "babba ", "babbb ", "bbaaa ", "bbaab "};
     string encrypted;
@@ -424,15 +417,10 @@ void Encryptor::BaconianCipher()
  * @param t_sentenceToGetEncrypted Original sentence (will be encrypted)
  * @return string Senctenc after being encrypted (Encrypted sentence)
  */
-string Encryptor::CaesarCipher(string t_sentenceToGetEncrypted) const
+string Encryptor::CaesarCipher(string t_sentenceToGetEncrypted, const int& shift) const
 {
     // convert all letter into upper case
     for (auto &c : t_sentenceToGetEncrypted) c = toupper(c);
-
-    // take shift from user
-    cout << "shift: ";
-    int shift;
-    cin >> shift;
     
     // encrypting credentials
     int position_in_alphabet, new_position;
@@ -466,9 +454,9 @@ string Encryptor::CaesarCipher(string t_sentenceToGetEncrypted) const
  * @brief The Basic Encyrpting that object uses to encrypte instance attribute
  * @details This function is based on the overloaded version: look above
  */
-void Encryptor::CaesarCipher()
+void Encryptor::CaesarCipher(const int& shift)
 {
-    m_EncryptedSenctence = Encryptor::CaesarCipher(m_OriginalSenctence);
+    m_EncryptedSenctence = Encryptor::CaesarCipher(m_OriginalSenctence, shift);
 
     // cipher used in encryption process: Caesar Cipher
     m_UsedCipher = "Caesar Cipher";
@@ -553,15 +541,13 @@ void Encryptor::MorseCode()
  * @param t_sentenceToGetEncrypted Original sentence (will be encrypted)
  * @return string Senctenc after being encrypted (Encrypted sentence)
  */
-string Encryptor::SimpleSubstitutionCipher(string t_sentenceToGetEncrypted) const
+string Encryptor::SimpleSubstitutionCipher(string t_sentenceToGetEncrypted, const string& t_key) const
 {
     // convert the message into uppercase
     for (auto &c : t_sentenceToGetEncrypted) c = toupper(c);
 
-    // take the key
-    cout << "key: ";
-    string key;
-    getline(cin >> ws, key);
+    // tmp version of key to convert it into upper cases (to make insencetive to case)
+    string key = t_key;
 
     // convert key into uppercase
     for (auto &c : key) c = toupper(c);
@@ -606,9 +592,9 @@ string Encryptor::SimpleSubstitutionCipher(string t_sentenceToGetEncrypted) cons
  * @brief The Basic Encyrpting that object uses to encrypte instance attribute
  * @details This function is based on the overloaded version: look above
  */
-void Encryptor::SimpleSubstitutionCipher()
+void Encryptor::SimpleSubstitutionCipher(const string& t_key)
 {
-    m_EncryptedSenctence = Encryptor::SimpleSubstitutionCipher(m_OriginalSenctence);
+    m_EncryptedSenctence = Encryptor::SimpleSubstitutionCipher(m_OriginalSenctence, t_key);
 
     // cipher used in encryption process: Simple Substitution Cipher
     m_UsedCipher = "Simple Substitution Cipher";
@@ -625,22 +611,22 @@ void Encryptor::SimpleSubstitutionCipher()
  * @param t_sentenceToGetEncrypted Original sentence (will be encrypted)
  * @return string Senctenc after being encrypted (Encrypted sentence)
  */
-string Encryptor::VignereCipher(string t_sentenceToGetEncrypted) const
+string Encryptor::VignereCipher(string t_sentenceToGetEncrypted, const string& t_key) const
 {
     // conver all the message's letters into uppercase
     for (auto &c: t_sentenceToGetEncrypted) c = toupper(c);
 
 
-    // take the key from the user
-    cout << "Key: ";
-    string key;
-    getline(cin >> ws, key);
+    // tmp version of key to convert it into upper cases (to make insencetive to case)
+    string key = t_key;
 
     //conver all the key's letter into uppercase
     for (auto &c: key) c = toupper(c);
     
-
+    // counter
     int count = 0;
+
+    // to store repeated key
     string repted_key;
 
     for (int i = 0; i < t_sentenceToGetEncrypted.length(); ++i)
@@ -698,9 +684,9 @@ string Encryptor::VignereCipher(string t_sentenceToGetEncrypted) const
  * @brief The Basic Encyrpting that object uses to encrypte instance attribute
  * @details This function is based on the overloaded version: look above
  */
-void Encryptor::VignereCipher()
+void Encryptor::VignereCipher(const string& t_key)
 {
-    m_EncryptedSenctence = Encryptor::VignereCipher(m_OriginalSenctence);
+    m_EncryptedSenctence = Encryptor::VignereCipher(m_OriginalSenctence, t_key);
 
     // cipher used in encryption process: Vignere Cipher
     m_UsedCipher = "Vignere Cipher";

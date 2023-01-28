@@ -58,8 +58,8 @@ public:
 
 
     /* Ciphers */
-    virtual string AffineCipher(string t_sentenceToGetEncrypted) const;                   // Affine Cipher
-    virtual void AffineCipher();                                                    // An overloaded version to encrypt a given sentence
+    virtual string AffineCipher(string t_sentenceToGetEncrypted, const int& a = 1, const int&b = 2) const;           // Affine Cipher
+    virtual void AffineCipher(const int&a = 1, const int& b = 2);                                                    // An overloaded version to encrypt a given sentence
 
     virtual string AtpashCipher(string t_sentenceToGetEncrypted) const;
     virtual void AtpashCipher();
@@ -67,17 +67,22 @@ public:
     virtual string BaconianCipher(string t_sentenceToGetEncrypted) const;
     virtual void BaconianCipher();
 
-    virtual string CaesarCipher(string t_sentenceToGetEncrypted) const;
-    virtual void CaesarCipher();
+    virtual string CaesarCipher(string t_sentenceToGetEncrypted, const int& shift = 1) const;
+    virtual void CaesarCipher(const int& shift = 1);
 
     virtual string MorseCode(string t_sentenceToGetEncrypted) const;
     virtual void MorseCode();
 
-    virtual string SimpleSubstitutionCipher(string t_sentenceToGetEncrypted) const;
-    virtual void SimpleSubstitutionCipher();
+    virtual string SimpleSubstitutionCipher(string t_sentenceToGetEncrypted, const string& t_key = "fady") const;
+    virtual void SimpleSubstitutionCipher(const string& t_key = "fady");
 
-    virtual string VignereCipher(string t_sentenceToGetEncrypted) const;
-    virtual void VignereCipher();
+    virtual string VignereCipher(string t_sentenceToGetEncrypted, const string& t_key = "fady") const;
+    virtual void VignereCipher(const string& t_key = "fady");
+
+
+    /* Operators Overloading (bitwise) */
+    friend istream& operator>> (istream& input, Encryptor& t_encryptor);          // Insertion operator
+    friend ostream& operator<< (ostream& output, const Encryptor& t_encryptor);   // Extraction operator
 
 
 
