@@ -47,7 +47,7 @@ int main()
     Encryptor e("hello from the other side");
 
     // corret output: hello from the other side
-    e.SimpleSubstitutionCipher("esxqma45vbdrwtjczknphoifly");
+    e.MorseCode();
 
     // // test atpash cipher
     // e.AtpashCipher();
