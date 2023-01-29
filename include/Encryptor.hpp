@@ -15,7 +15,7 @@
 #include <cstring>
 #include <algorithm>
 #include <cmath>
-#include "Exceptions/EncryptorExceptions.hpp"
+#include "../src/Exceptions/EncryptorExceptions.cpp"
 using namespace std;
 
 
