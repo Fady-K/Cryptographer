@@ -428,12 +428,51 @@ string Encryptor::BaconianCipher(string t_sentenceToGetEncrypted) const
         }
         else
         {
-            // fetch it's position from Alphabet
-            int position_in_alphabet = Alphabet.find(chara);
+            try
+            {
+                // fetch it's position from Alphabet
+                int position_in_alphabet = Alphabet.find(chara);
 
-            // get the equivelant from code
-            string coded_chara = code[position_in_alphabet];
-            encrypted += coded_chara;
+                // check if a valid index
+                if (!(position_in_alphabet >= 0 && position_in_alphabet <= 25))
+                {
+                    throw(EncryptorExceptions("Invalid Alphabet Index, You Have Entered A None Alphabet letter!"));
+                } 
+                else
+                {
+                    try
+                    {
+                        // get the equivelant from code
+                        string coded_chara = code[position_in_alphabet];
+                        encrypted += coded_chara;
+                    }
+                    catch(...)
+                    {
+                        // exit failure
+                        fprintf(stderr, "Baconian Cipher() failed in file %s at line # %d\n", __FILE__,__LINE__);
+
+                        // general purpose exception
+                        cout << "!! Can't find an encrypted equivalent !!" << endl;
+
+                        // exits
+                        exit(EXIT_FAILURE);
+                    }
+
+                } 
+            }
+            // catch the exception
+            catch(EncryptorExceptions e)
+            {
+                // exit failure
+                fprintf(stderr, "Baconian Cipher() failed in file %s at line # %d\n", __FILE__,__LINE__);
+
+                // general purpose exception
+                cout << e.what() << endl;
+
+                // exits
+                exit(EXIT_FAILURE);
+            }
+            
         }
     }
     
@@ -477,8 +516,12 @@ string Encryptor::CaesarCipher(string t_sentenceToGetEncrypted, const int& shift
     char encrypted;
 
     // iterate over each char in original and encrypt it
-    for (int i = 0; i < t_sentenceToGetEncrypted.length(); ++i){
+    for (int i = 0; i < t_sentenceToGetEncrypted.length(); ++i)
+    {
+        // equivalant chararcter
         char character = t_sentenceToGetEncrypted[i];
+
+        // if char is space of digit then append it without encryption
         if (isspace(character) || (isdigit(character)))
         {
             encrpted_message += character;
@@ -486,16 +529,75 @@ string Encryptor::CaesarCipher(string t_sentenceToGetEncrypted, const int& shift
         }
         else
         {
-            position_in_alphabet = Alphabet.find(character);
-            new_position = Mod((position_in_alphabet + shift), 26);
-            encrypted = Alphabet[new_position];
-            encrpted_message += encrypted;
+            try
+            {
+                // encrypt it using  caeser cipher
+                // fetch it's position from Alphabet
+                position_in_alphabet = Alphabet.find(character);
+
+                // check if a valid index
+                if (!(position_in_alphabet >= 0 && position_in_alphabet <= 25))
+                {
+                    throw(EncryptorExceptions("Invalid Alphabet Index, You Have Entered A None Alphabet letter!"));
+                }
+                // check if valid shift
+                // shift valid range 0: 25
+                else if (!(shift >= 0 && shift <= 25))
+                {
+                    // throw a out of range error
+                    throw(EncryptorExceptions("Shift is out of valid range 0: 25!"));
+                } 
+                else
+                {
+                    try
+                    {
+                        // encrypt this char
+                        new_position = Mod((position_in_alphabet + shift), 26);
+                        encrypted = Alphabet[new_position];
+                        encrpted_message += encrypted;
+                    }
+                    catch(...)
+                    {
+                        // exit failure
+                        fprintf(stderr, "Baconian Cipher() failed in file %s at line # %d\n", __FILE__,__LINE__);
+
+                        // general purpose exception
+                        cout << "!! Can't find an encrypted equivalent !!" << endl;
+
+                        // exits
+                        exit(EXIT_FAILURE);     
+                    }
+
+                }
+            } 
+            catch(EncryptorExceptions e)
+            {
+                // cause for failure
+                fprintf(stderr, "Caesar Cipher() failed in file %s at line # %d\n", __FILE__,__LINE__);
+
+                // general purpose exception
+                cout << e.what() << endl;
+
+                // exits
+                exit(EXIT_FAILURE);
+            }
+            catch(...)
+            {
+                // exit failure
+                fprintf(stderr, "Baconian Cipher() failed in file %s at line # %d\n", __FILE__,__LINE__);
+
+                // general purpose exception
+                cout << "!! Baconian Cipher Failed !!" << endl;
+
+                // exits
+                exit(EXIT_FAILURE);            
+            }
+
         }
     }
 
     // return the encrypted message
     return encrpted_message;
-   
 }
 
 
