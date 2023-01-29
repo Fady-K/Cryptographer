@@ -12,6 +12,7 @@
 #include "Encryptor.hpp"
 #include <vector>
 #include <bits/stdc++.h>
+#include "../src/Exceptions/DecryptorExceptions.cpp"
 
 
 /* Notes: incases calling any constructor from derived class, and there was a default in the base, bases default contructor is called first */
