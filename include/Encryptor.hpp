@@ -96,4 +96,5 @@ public:
 protected:
     long Mod(int a, int b) const;
     void ModifyAlphabet(string &t_modifiedAlphabet, string t_alphabet, string &t_key) const;
+    bool IsComprisedOfAbc(const string& s) const;
 };
