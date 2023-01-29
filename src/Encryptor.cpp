@@ -651,10 +651,47 @@ string Encryptor::MorseCode(string t_sentenceToGetEncrypted) const
         }
         else
         {
-            // fetch the character's position in abc
-            int position_in_alphabet = Alphabet.find(chara);
-            // get the corresponding morse companitation thereafter concatinate it with encrypted
-            encrypted += morse_code[position_in_alphabet] + ' ';
+            try
+            {
+                // fetch the character's position in abc
+                int position_in_alphabet = Alphabet.find(chara);
+
+                // check if valid char 
+                if (!(position_in_alphabet >=0 && position_in_alphabet <= 25))
+                {
+                    throw(EncryptorExceptions("You have entered character that has no code in morse code table!"));
+                }
+                else
+                {
+                    try
+                    {
+                        // get the corresponding morse companitation thereafter concatinate it with encrypted
+                        encrypted += morse_code[position_in_alphabet] + ' ';
+                    }
+                    catch(exception e)
+                    {
+                        // exception cause
+                        fprintf(stderr, "MorseCode() failed in file %s at line # %d\n", __FILE__,__LINE__);
+
+                        // general message
+                        cout << e.what() << endl;
+
+                        // exit failure
+                        exit(EXIT_FAILURE);
+                    }
+                }
+            }
+            catch(EncryptorExceptions e)
+            {
+                // exit failure
+                fprintf(stderr, "MorseCode() failed in file %s at line # %d\n", __FILE__,__LINE__);
+
+                // general purpose exception
+                cout << "!! Morse Code Failed !!" << endl;
+
+                // exits
+                exit(EXIT_FAILURE);            
+            }
         }
     }
 
@@ -698,45 +735,128 @@ void Encryptor::MorseCode()
  */
 string Encryptor::SimpleSubstitutionCipher(string t_sentenceToGetEncrypted, const string& t_key) const
 {
-    // convert the message into uppercase
-    for (auto &c : t_sentenceToGetEncrypted) c = toupper(c);
+    // empty string to hold encryped sentence
+    string encrypted = "";
 
-    // tmp version of key to convert it into upper cases (to make insencetive to case)
-    string key = t_key;
-
-    // convert key into uppercase
-    for (auto &c : key) c = toupper(c);
-
+    // modifed alphabet
     string modified_alphabet = "";
 
-    // add the key letter's to the beggining of the modified abc
-    for (int i = 0; i < key.length(); ++i)
+    try
     {
-        modified_alphabet += key[i];
-    }
+        // convert the message into uppercase
+        for (auto &c : t_sentenceToGetEncrypted) c = toupper(c);
 
-    ModifyAlphabet(modified_alphabet, Alphabet, key);
-    string encrypted = "";
-    // iterate over the message and encrypt
-    for (int i = 0; i < t_sentenceToGetEncrypted.length(); ++i)
-    {
-        char chara = t_sentenceToGetEncrypted[i];
+        /*
+         * key constraints
+         * length == 26
+         * can't include special characters
+        */
 
-        // if the chara existing in the message is space or digit append it without any modification
-        if ((chara == ' ') || (isdigit(chara)))
+        if (!IsComprisedOfAbc(t_key))
         {
-            encrypted += chara;
-            continue;
+            throw(EncryptorExceptions("Key must be compirsed alphabet letter only, can't have special characters or digits!"));
         }
+        else if (t_key.length() != 26)
+        {
+            // throw invalid range
+            throw(EncryptorExceptions("Key must be comprised of 26 char!"));
 
-        // if not then encrypt the chara
+        }
         else
         {
-            int position_in_alphabet = Alphabet.find(chara);
-            char new_chara = modified_alphabet[position_in_alphabet];
-            encrypted += new_chara;
+            // tmp version of key to convert it into upper cases (to make insencetive to case)
+            string key = t_key;
+
+            // convert key into uppercase
+            for (auto &c : key) c = toupper(c);
+
+            // add the key letter's to the beggining of the modified abc
+            for (int i = 0; i < key.length(); ++i)
+            {
+                modified_alphabet += key[i];
+            }
+
+            // generate the new alphabet bases the given key
+            ModifyAlphabet(modified_alphabet, Alphabet, key);
+
+            // iterate over the message and encrypt
+            for (int i = 0; i < t_sentenceToGetEncrypted.length(); ++i)
+            {
+                char chara = t_sentenceToGetEncrypted[i];
+
+                // if the chara existing in the message is space or digit append it without any modification
+                if ((chara == ' ') || (isdigit(chara)))
+                {
+                    encrypted += chara;
+                    continue;
+                }
+
+                // if not then encrypt the chara
+                else
+                {
+                    try
+                    {
+                        // fetch position from abc
+                        int position_in_alphabet = Alphabet.find(chara);
+
+                        // check if valid char (in alphabet)
+                        if (!(position_in_alphabet >= 0 && position_in_alphabet <= 25))
+                        {
+                            // throw out of range error
+                            throw(EncryptorExceptions("You have entered a character that has no equvilant in encrypted alphabet, (special characters can't be encoded)!"));
+
+                        }
+                        else
+                        {
+                            // fetch the equivelant from modified alphabet
+                            char new_chara = modified_alphabet[position_in_alphabet];
+
+                            // append it to encrypted
+                            encrypted += new_chara;
+                        }
+
+                    }
+                    catch(EncryptorExceptions e)
+                    {
+                        // exception cause
+                        fprintf(stderr, "SimpleSubstitutionCipher() faild in file %s at line # %d\n", __FILE__, __LINE__);
+
+                        // error message
+                        cout << e.what() << endl;
+
+                        // exits the program
+                        exit(EXIT_FAILURE);
+                    }
+
+                }
+            }
+
         }
+
     }
+    catch(EncryptorExceptions e)
+    {
+        // exception cause
+        fprintf(stderr, "SimpleSubstitutionCipher() faild in file %s at line # %d\n", __FILE__,__LINE__);
+
+        // error message
+        cout << e.what() << endl;
+
+        // exit failure
+        exit(EXIT_FAILURE);
+    }
+    catch(exception e)
+    {
+        // exception cause
+        fprintf(stderr, "SimpleSubstitutionCipher() faild in file %s at line # %d\n", __FILE__,__LINE__);
+
+        // error message (general one)
+        cout << e.what() << endl;
+
+        // exit failure
+        exit(EXIT_FAILURE);
+    }
+
 
     // return the encrypted message
     return encrypted;
@@ -993,4 +1113,24 @@ string Encryptor::GenerateId(int totalNumberOfEncryptors, bool forEncryptor)
 
     // return id
     return id;
+}
+
+
+bool Encryptor::IsComprisedOfAbc(const string& s) const
+{
+    // flag, initialized as true
+    bool ans = true;
+    // iterate over each letter
+    for (size_t i = 0; i < s.length(); ++i)
+    {
+        // if not alpha, then break and return false
+        if (!isalpha(s[i]))
+        {
+            ans = false;
+            break;
+        }
+    }
+
+    // return the answer
+    return ans;
 }
