@@ -280,14 +280,21 @@ string Decryptor::AtpashCipher(string t_sentenceToGetDecrypted) const
     //loop over array of chars and fech each char's position in abs
     for (int i = 0; i < t_sentenceToGetDecrypted.length(); i++){
         
-        char chara = t_sentenceToGetDecrypted[i];
+        // only if alpha else appended to decrypted
+        if (isalpha(t_sentenceToGetDecrypted[i]))
+        {
+            // position in abc >> find
+            int position_in_abc = abc.find(t_sentenceToGetDecrypted[i]);
 
-        // position in abc >> find
-        int position_in_abc = abc.find(chara);
+            // get the equivilant encrpted char of inverted abc
+            
+            decrypted += inverted_abc[position_in_abc];
+        }
+        else
+        {
+            decrypted += t_sentenceToGetDecrypted[i];
+        }
 
-        // get the equivilant encrpted char of inverted abc
-        
-        decrypted += inverted_abc[position_in_abc];
     }
 
     count = 0;
