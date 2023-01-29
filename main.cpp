@@ -44,10 +44,10 @@ int main()
     // Testing all ciphers
     
     // affince cipher decryption
-    Encryptor e("hello from the other side");
+    Encryptor e("345");
 
-    // // corret output: hello from the other side
-    // e.AffineCipher(5, 10);
+    // corret output: hello from the other side
+    e.CaesarCipher(20);
 
     // // test atpash cipher
     // e.AtpashCipher();
