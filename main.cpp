@@ -44,33 +44,42 @@ int main()
     // Testing all ciphers
     
     // affince cipher decryption
-    Encryptor e("hello from the other side");
+    // Encryptor e("hello from the other side00");
 
-    // corret output: hello from the other side
-    e.MorseCode();
-
-    // // test atpash cipher
-    // e.AtpashCipher();
-
-    // // test Baconian cipher
-    // e.BaconianCipher();
-
-    // // ceasar cipher generic version
-    // e.CaesarCipher();
-
-    // // with another shift
-    // e.CaesarCipher(21);
-
-    // // testing morse code
+    // // corret output: hello from the other side
     // e.MorseCode();
 
-    // // generic version
-    // e.SimpleSubstitutionCipher("hello");
+    // // // test atpash cipher
+    // // e.AtpashCipher();
 
-    // // generic version
-    // e.VignereCipher("hello");
-    // // show 
-    cout << e << endl;
+    // // // test Baconian cipher
+    // // e.BaconianCipher();
+
+    // // // ceasar cipher generic version
+    // // e.CaesarCipher();
+
+    // // // with another shift
+    // // e.CaesarCipher(21);
+
+    // // // testing morse code
+    // // e.MorseCode();
+
+    // // // generic version
+    // // e.SimpleSubstitutionCipher("hello");
+
+    // // // generic version
+    // // e.VignereCipher("hello");
+    // // // show 
+    // cout << e << endl;
+
+
+    /* testing Decrypting ciphers */
+    // Encryptor d("hello from here");
+
+    Decryptor d("SVOOL RZN UZWB PZNZO SLD ZIV BLF GSV XLWV 52421322");
+
+    d.SimpleSubstitutionCipher();
+    cout << d <<  endl;
 
 
     return 0;
