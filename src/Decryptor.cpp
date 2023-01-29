@@ -141,13 +141,8 @@ bool Decryptor::IsSentenceGotDecrypted() const { return m_IsDecrypted; }
  * @param t_sentence encrypted sentence
  * @return string decrypted sentence
  */
-string Decryptor::AffineCipher(string t_sentence) const 
+string Decryptor::AffineCipher(string t_sentence, const int& c, const int& b) const 
 {
-    cout << "Enter The value of (c, b) Where c / (y - b) % 26 Is The Formula of Decryption: ";
-    int c, b;
-    cin >> c >> b;
-
-
     string decrypted = "";
     int a_inv = 0;
     int flag = 0;
@@ -183,10 +178,10 @@ string Decryptor::AffineCipher(string t_sentence) const
 }
 
 
-void Decryptor::AffineCipher()
+void Decryptor::AffineCipher(const int& c, const int& b)
 {
     // dry
-    m_DecryptedSentence = Decryptor::AffineCipher(this->m_OriginalSenctence);
+    m_DecryptedSentence = Decryptor::AffineCipher(this->m_OriginalSenctence, c, b);
 
     // cipher used in decrypting process: affine cipher
     m_UsedCipher = "Affine Cipher";
@@ -356,15 +351,10 @@ void Decryptor::BaconianCipher()
 
 
 
-string Decryptor::CaesarCipher(string t_sentenceToGetDecrypted) const 
+string Decryptor::CaesarCipher(string t_sentenceToGetDecrypted, const int& t_shift) const 
 {   
     // convert into upper case
     for (auto &c : t_sentenceToGetDecrypted) c = toupper(c);
-
-    // take shift from user 
-    cout << "shift: ";
-    int shift;
-    cin >> shift;
     
     int position_in_abc, new_position;
     string decrypted;
@@ -379,7 +369,7 @@ string Decryptor::CaesarCipher(string t_sentenceToGetDecrypted) const
         else
         {
             position_in_abc = abc.find(character);
-            new_position = Mod((position_in_abc - shift), 26);
+            new_position = Mod((position_in_abc - t_shift), 26);
             decrypted += abc[new_position];
         }
     }
@@ -389,10 +379,10 @@ string Decryptor::CaesarCipher(string t_sentenceToGetDecrypted) const
 }
 
 
-void Decryptor::CaesarCipher()
+void Decryptor::CaesarCipher(const int& t_shift)
 {
     // dry
-    m_DecryptedSentence = Decryptor::CaesarCipher(this-> m_OriginalSenctence);
+    m_DecryptedSentence = Decryptor::CaesarCipher(this-> m_OriginalSenctence, t_shift);
 
     // cipher used in decrypting process: Caesar Cipher
     m_UsedCipher = "Caesar Cipher";
@@ -460,16 +450,14 @@ void Decryptor::MorseCode()
 }
 
 
-string Decryptor::SimpleSubstitutionCipher(string t_sentenceToGetDecrypted) const 
+string Decryptor::SimpleSubstitutionCipher(string t_sentenceToGetDecrypted, const string& t_key) const 
 {   
     // convert into uppercase
     for (auto &c : t_sentenceToGetDecrypted)
         c = toupper(c);
 
-    // key
-    cout << "Key (Resticted To The Encryption Key): ";
-    string key;
-    getline(cin >> ws, key);
+    // take copy from t_key as it's can't be modifed (constant)
+    string key = t_key;
 
     // key to uppercase
     for (auto &c : key)
@@ -516,10 +504,10 @@ string Decryptor::SimpleSubstitutionCipher(string t_sentenceToGetDecrypted) cons
 }
 
 
-void Decryptor::SimpleSubstitutionCipher()
+void Decryptor::SimpleSubstitutionCipher(const string& t_key)
 {
     // dry
-    m_DecryptedSentence = Decryptor::SimpleSubstitutionCipher(this-> m_OriginalSenctence);
+    m_DecryptedSentence = Decryptor::SimpleSubstitutionCipher(this-> m_OriginalSenctence, t_key);
 
     // cipher used in decrypting process: Simple Substitution Cipher
     m_UsedCipher = "Simple Substitution Cipher";

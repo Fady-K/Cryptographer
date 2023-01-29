@@ -49,8 +49,8 @@ public:
 
 
     /* Ciphers */
-    virtual string AffineCipher(string t_sentence) const;
-    virtual void AffineCipher();
+    virtual string AffineCipher(string t_sentence, const int& c, const int& b) const;
+    virtual void AffineCipher(const int& c, const int& b);
 
     virtual string AtpashCipher(string t_sentence) const;
     virtual void AtpashCipher();
@@ -58,14 +58,14 @@ public:
     virtual string BaconianCipher(string t_sentence) const;
     virtual void BaconianCipher();
 
-    virtual string CaesarCipher(string t_sentence) const;
-    virtual void CaesarCipher();
+    virtual string CaesarCipher(string t_sentence, const int& t_shift) const;
+    virtual void CaesarCipher(const int& t_shift);
 
     virtual string MorseCode(string t_sentence) const;
     virtual void MorseCode();
 
-    virtual string SimpleSubstitutionCipher(string t_sentence) const;
-    virtual void SimpleSubstitutionCipher();
+    virtual string SimpleSubstitutionCipher(string t_sentence, const string& t_key) const;
+    virtual void SimpleSubstitutionCipher(const string& t_key);
 
     // virtual string VignereCipher(string t_sentence) const;
     // virtual void VignereCipher();
