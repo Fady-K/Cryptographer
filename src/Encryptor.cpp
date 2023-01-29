@@ -630,6 +630,9 @@ string Encryptor::MorseCode(string t_sentenceToGetEncrypted) const
 {
     // credentials
     string morse_code[36] = {".-", "-...", "-.-.", "-..", ".", "..-.", "--.", "....", "..", ".---", "-.-", ".-..", "--", "-.", "---", ".--.", "--.-", ".-.", "...", "-", "..-", "...-", ".--", "-..-", "-.--", "--..", "-----", ".----","..---","...--","....-",".....","-....","--....","---..", "----."};
+    
+    // alphabet + digits
+    string Alphabet = ::Alphabet + "0123456789";
 
     // conver all the message's letters into uppercase
     for (auto &c : t_sentenceToGetEncrypted) c = toupper(c);
@@ -657,7 +660,7 @@ string Encryptor::MorseCode(string t_sentenceToGetEncrypted) const
                 int position_in_alphabet = Alphabet.find(chara);
 
                 // check if valid char 
-                if (!(position_in_alphabet >=0 && position_in_alphabet <= 25))
+                if (!(position_in_alphabet >=0 && position_in_alphabet <= 36))
                 {
                     throw(EncryptorExceptions("You have entered character that has no code in morse code table!"));
                 }
@@ -687,7 +690,7 @@ string Encryptor::MorseCode(string t_sentenceToGetEncrypted) const
                 fprintf(stderr, "MorseCode() failed in file %s at line # %d\n", __FILE__,__LINE__);
 
                 // general purpose exception
-                cout << "!! Morse Code Failed !!" << endl;
+                cout << e.what() << endl;
 
                 // exits
                 exit(EXIT_FAILURE);            
