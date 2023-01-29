@@ -521,11 +521,10 @@ string Encryptor::CaesarCipher(string t_sentenceToGetEncrypted, const int& shift
         // equivalant chararcter
         char character = t_sentenceToGetEncrypted[i];
 
-        // if char is space of digit then append it without encryption
-        if (isspace(character) || (isdigit(character)))
+        // caesar cipher encrypts only alphabet, there fore any thing else won't be encryted
+        if (!isalpha(character))
         {
             encrpted_message += character;
-            continue;
         }
         else
         {

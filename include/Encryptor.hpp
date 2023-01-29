@@ -73,8 +73,8 @@ public:
     virtual string MorseCode(string t_sentenceToGetEncrypted) const;
     virtual void MorseCode();
 
-    virtual string SimpleSubstitutionCipher(string t_sentenceToGetEncrypted, const string& t_key = "fady") const;
-    virtual void SimpleSubstitutionCipher(const string& t_key = "fady");
+    virtual string SimpleSubstitutionCipher(string t_sentenceToGetEncrypted, const string& t_key = "zyxwvutsrqponmlkjihgfedcba") const;
+    virtual void SimpleSubstitutionCipher(const string& t_key = "zyxwvutsrqponmlkjihgfedcba");
 
     virtual string VignereCipher(string t_sentenceToGetEncrypted, const string& t_key = "fady") const;
     virtual void VignereCipher(const string& t_key = "fady");
