@@ -15,7 +15,7 @@
 #include <cstring>
 #include <algorithm>
 #include <cmath>
-#include "../src/Exceptions/EncryptorExceptions.cpp"
+#include "Exceptions/EncryptorExceptions.hpp"
 using namespace std;
 
 
@@ -54,12 +54,12 @@ public:
     inline string GetUsedCipher() const;
     inline string GetId() const;
 
-    inline bool IsSentenceGotEncrypted() const;
+    inline bool IsSentenceGotEncrpyted() const;
 
 
     /* Ciphers */
-    virtual string AffineCipher(string t_sentenceToGetEncrypted, const int& a = 1, const int&b = 3) const;           // Affine Cipher
-    virtual void AffineCipher(const int&a = 1, const int& b = 3);                                                    // An overloaded version to encrypt a given sentence
+    virtual string AffineCipher(string t_sentenceToGetEncrypted, const int& a = 1, const int&b = 2) const;           // Affine Cipher
+    virtual void AffineCipher(const int&a = 1, const int& b = 2);                                                    // An overloaded version to encrypt a given sentence
 
     virtual string AtpashCipher(string t_sentenceToGetEncrypted) const;
     virtual void AtpashCipher();
@@ -97,4 +97,3 @@ protected:
     long Mod(int a, int b) const;
     void ModifyAlphabet(string &t_modifiedAlphabet, string t_alphabet, string &t_key) const;
 };
-

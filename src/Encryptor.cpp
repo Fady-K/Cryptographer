@@ -182,7 +182,7 @@ inline string Encryptor::GetId() const {return m_Id; }
  * @return true 
  * @return false 
  */
-inline bool Encryptor::IsSentenceGotEncrypted() const { return m_IsEncrypted; }
+inline bool Encryptor::IsSentenceGotEncrpyted() const { return m_IsEncrypted; }
 
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -191,13 +191,11 @@ inline bool Encryptor::IsSentenceGotEncrypted() const { return m_IsEncrypted; }
 
 
 /**
- * @brief This function takes a sentence from user and encrypts it using Affine cipher
- * @details For more details on affice cipher check this link: https://en.wikipedia.org/wiki/Affine_cipher
+ * @brief This function takes a sentence from user then encrypts it using Affine cipher
+ * @details For details on affice cipher check this link: https://en.wikipedia.org/wiki/Affine_cipher
  * @details this function doesn't deal with the instance attributes, it's an overload for the basic one 
  * @param t_sentenceToGetEncrypted Original sentence (will be encrypted)
- * @param a First constant in encrypting formula (a x + b) mod 26
- * @param b Second constant in encryping formula  (a x + b) mod 26
- * @return string Sentence after being encrypted (Encrypted sentence) 
+ * @return string Senctenc after being encrypted (Encrypted sentence)
  */
 string Encryptor::AffineCipher (string t_sentenceToGetEncrypted, const int& a, const int& b) const
 {
@@ -205,7 +203,7 @@ string Encryptor::AffineCipher (string t_sentenceToGetEncrypted, const int& a, c
     for (auto &c: t_sentenceToGetEncrypted) c = toupper(c);
     
     // initiallize the Alphabet to fetch the chara position
-    string encrypted;
+    string encrpyted;
 
     int positionInAlphabet, newPosition;
     char newChar;
@@ -219,77 +217,29 @@ string Encryptor::AffineCipher (string t_sentenceToGetEncrypted, const int& a, c
         // check if the char is space, add space to encrypted char and continue
         if (chara == ' ')
         {
-            encrypted += " ";
+            encrpyted += " ";
             continue;
         }
         else
         {
-            try
-            {
-                // if not then fetch the char index from Alphabet (x), then  use the following foumla to get the new index >> (5x + 8)
-                positionInAlphabet = Alphabet.find(chara);
+            // if not then fetch the char index from Alphabet (x), then  use the following foumla to get the new index >> (5x + 8)
+            positionInAlphabet = Alphabet.find(chara);  
 
-                // check for position validaty in alphabet
-                if (!(positionInAlphabet >= 0 && positionInAlphabet <= 25))
-                {
-                    throw(EncryptorExceptions("Invalid Alphabet Index, You Have Entered A None Alphabet letter!"));
-                }  
-                // check for a range, valid range(0, 25);
-                else if (!(a >= 0 && a <= 25))
-                {
-                    // handel the exception
-                    throw(EncryptorExceptions("Constant a is out of valid range 0 : 25 !"));
-                }
-                
-                // check for b value, valid value {1,3,5,7,9,11,15,17,19,21,23,25}
-                // invalid if b is even or not in valid range or b == 13
-                else if ((b % 2 == 0) || !(b >= 0 && b <= 25) || (b == 13))
-                {
-                    // throw encryptor error exception
-                    throw(EncryptorExceptions("Constant b is a not valid!, Accepted values {1,3,5,7,9,11,15,17,19,21,23,25}"));
-                }
-                else
-                {
-                    try
-                    {
-                        // it's guranted that newPosition will be positive therefore i used the regulare division reminder >> %
-                        newPosition = ((a * positionInAlphabet) + b) % 26;
-                        newChar = Alphabet[newPosition];
-                        encrypted += newChar;
-                    }
-                    catch(...)
-                    {
-                        // exit failure
-                        fprintf(stderr, "Affine Cipher() failed in file %s at line # %d\n", __FILE__,__LINE__);
-
-                        // general purpose exception
-                        cout << "!! Can't find an encrypted equivalent !!" << endl;
-
-                        // exits
-                        exit(EXIT_FAILURE);
-                    }
-                }
-            }
-            catch(EncryptorExceptions e)
-            {
-                fprintf(stderr, "Affine Cipher() failed in file %s at line # %d\n", __FILE__,__LINE__);
-                cout << e.what() << endl;
-                exit(EXIT_FAILURE);
-            }
+            // it's guranted that newPosition will be positive therefore i used the regulare division reminder >> %
+            newPosition = ((a * positionInAlphabet) + b) % 26;
+            newChar = Alphabet[newPosition];
+            encrpyted += newChar;
         }
     }
 
     // return the encrypted message
-    return encrypted;
+    return encrpyted;
 }
 
 
-
 /**
- * @brief The basic function used by object to encrypt instance attribute
+ * @brief The Basic Encyrpting that object uses to encrypte instance attribute
  * @details This function is based on the overloaded version: look above
- * @param a First constant in encrypting formula (a x + b) mod 26
- * @param b Second constant in encryping formula  (a x + b) mod 26
  */
 void Encryptor::AffineCipher(const int& a, const int& b)
 {
@@ -304,10 +254,9 @@ void Encryptor::AffineCipher(const int& a, const int& b)
 }
 
 
-
 /**
- * @brief This function takes a sentence from user and encrypts it using atpash cipher
- * @details For more details on atpash cipher check this link: https://en.wikipedia.org/wiki/Atpash_cipher
+ * @brief This function takes a sentence from user then encrypts it using atpash cipher
+ * @details For details on affice cipher check this link: https://en.wikipedia.org/wiki/Atpash_cipher
  * @details this function doesn't deal with the instance attributes, it's an overload for the basic one 
  * @param t_sentenceToGetEncrypted Original sentence (will be encrypted)
  * @return string Senctenc after being encrypted (Encrypted sentence)
@@ -380,7 +329,7 @@ string Encryptor::AtpashCipher(string t_sentenceToGetEncrypted) const
 
 
 /**
- * @brief The basic function used by object to encrypt instance attribute
+ * @brief The Basic Encyrpting that object uses to encrypte instance attribute
  * @details This function is based on the overloaded version: look above
  */
 void Encryptor::AtpashCipher()
@@ -396,11 +345,11 @@ void Encryptor::AtpashCipher()
 
 
 /**
- * @brief This function takes a sentence from user and encrypts it using Baconian cipher
- * @details For details on Baconian cipher cipher check this link: https://en.wikipedia.org/wiki/Bacon%27s_cipher
+ * @brief This function takes a sentence from user then encrypts it using Baconian cipher
+ * @details For details on affice cipher check this link: https://en.wikipedia.org/wiki/Bacon%27s_cipher
  * @details this function doesn't deal with the instance attributes, it's an overload for the basic one 
  * @param t_sentenceToGetEncrypted Original sentence (will be encrypted)
- * @return string Senctence after being encrypted (Encrypted sentence)
+ * @return string Senctenc after being encrypted (Encrypted sentence)
  */
 string Encryptor::BaconianCipher(string t_sentenceToGetEncrypted) const
 {
@@ -446,7 +395,7 @@ string Encryptor::BaconianCipher(string t_sentenceToGetEncrypted) const
 
 
 /**
- * @brief The basic function used by object to encrypt instance attribute
+ * @brief The Basic Encyrpting that object uses to encrypte instance attribute
  * @details This function is based on the overloaded version: look above
  */
 void Encryptor::BaconianCipher()
@@ -466,8 +415,7 @@ void Encryptor::BaconianCipher()
  * @details For a more details about caesar cipher check this link: https://en.wikipedia.org/wiki/Caesar_cipher
  * @details this function doesn't deal with the instance attributes, it's an overload for the basic one 
  * @param t_sentenceToGetEncrypted Original sentence (will be encrypted)
- * @param shift a required int for the encyrpting process
- * @return string Sentence after being encrypted (Encrypted sentence)
+ * @return string Senctenc after being encrypted (Encrypted sentence)
  */
 string Encryptor::CaesarCipher(string t_sentenceToGetEncrypted, const int& shift) const
 {
@@ -498,14 +446,13 @@ string Encryptor::CaesarCipher(string t_sentenceToGetEncrypted, const int& shift
 
     // return the encrypted message
     return encrpted_message;
+   
 }
 
 
 /**
- * @brief The basic function used by object to encrypt instance attribute
+ * @brief The Basic Encyrpting that object uses to encrypte instance attribute
  * @details This function is based on the overloaded version: look above
- * @details For a more details about caesar cipher check this link: https://en.wikipedia.org/wiki/Caesar_cipher
-
  */
 void Encryptor::CaesarCipher(const int& shift)
 {
@@ -520,11 +467,11 @@ void Encryptor::CaesarCipher(const int& shift)
 
 
 /**
- * @brief This function takes a sentence from user and encrypt it using MorseCode
+ * @brief This function takes a sentence from user then encrpted using MorseCode
  * @details For details on affice cipher check this link: https://en.wikipedia.org/wiki/Morse_code
  * @details this function doesn't deal with the instance attributes, it's an overload for the basic one 
  * @param t_sentenceToGetEncrypted Original sentence (will be encrypted)
- * @return string Sentence after being encrypted (Encrypted sentence)
+ * @return string Senctenc after being encrypted (Encrypted sentence)
  */
 string Encryptor::MorseCode(string t_sentenceToGetEncrypted) const
 {
@@ -574,8 +521,6 @@ string Encryptor::MorseCode(string t_sentenceToGetEncrypted) const
 /**
  * @brief The Basic Encyrpting that object uses to encrypte instance attribute
  * @details This function is based on the overloaded version: look above
- * @details For details on affice cipher check this link: https://en.wikipedia.org/wiki/Morse_code
-
  */
 void Encryptor::MorseCode()
 {
@@ -590,12 +535,11 @@ void Encryptor::MorseCode()
 
 
 /**
- * @brief This function takes a sentence from user and encrypts it via Simple Substitution Cipher
+ * @brief This function takes a sentence from user then encrpted using Simple Substitution Cipher
  * @details For details on affice cipher check this link: https://en.wikipedia.org/wiki/Substitution_cipher
  * @details this function doesn't deal with the instance attributes, it's an overload for the basic one 
  * @param t_sentenceToGetEncrypted Original sentence (will be encrypted)
- * @param t_key an essential string for the encryption process
- * @return string sentence after being encrypted (Encrypted sentence)
+ * @return string Senctenc after being encrypted (Encrypted sentence)
  */
 string Encryptor::SimpleSubstitutionCipher(string t_sentenceToGetEncrypted, const string& t_key) const
 {
@@ -645,11 +589,9 @@ string Encryptor::SimpleSubstitutionCipher(string t_sentenceToGetEncrypted, cons
 
 
 /**
- * @brief The basic function used by object to encrypt instance attribute
+ * @brief The Basic Encyrpting that object uses to encrypte instance attribute
  * @details This function is based on the overloaded version: look above
- * @details For details on affice cipher check this link: https://en.wikipedia.org/wiki/Substitution_cipher
- * @param t_key an essential string for the encryption process
- */ 
+ */
 void Encryptor::SimpleSubstitutionCipher(const string& t_key)
 {
     m_EncryptedSenctence = Encryptor::SimpleSubstitutionCipher(m_OriginalSenctence, t_key);
@@ -663,12 +605,11 @@ void Encryptor::SimpleSubstitutionCipher(const string& t_key)
 
 
 /**
- * @brief This function takes a sentence from user, and encrypts it using Vignere Cipher
- * @details For a more details on Vignere cipher check this link: https://en.wikipedia.org/wiki/Vigen%C3%A8re_cipher
- * @details This function doesn't deal with the instance attributes, it's an overload for the basic one 
+ * @brief This function takes a sentence from user then encrpted using MorseCode
+ * @details For details on affice cipher check this link: https://en.wikipedia.org/wiki/Morse_code
+ * @details this function doesn't deal with the instance attributes, it's an overload for the basic one 
  * @param t_sentenceToGetEncrypted Original sentence (will be encrypted)
- * @param t_key An essential string for the encrypting process
- * @return string Sentence after being encrypted (Encrypted sentence)
+ * @return string Senctenc after being encrypted (Encrypted sentence)
  */
 string Encryptor::VignereCipher(string t_sentenceToGetEncrypted, const string& t_key) const
 {
@@ -686,7 +627,7 @@ string Encryptor::VignereCipher(string t_sentenceToGetEncrypted, const string& t
     int count = 0;
 
     // to store repeated key
-    string repeated_key;
+    string repted_key;
 
     for (int i = 0; i < t_sentenceToGetEncrypted.length(); ++i)
     {
@@ -696,7 +637,7 @@ string Encryptor::VignereCipher(string t_sentenceToGetEncrypted, const string& t
         }
 
         char chara = key[count];
-        repeated_key += chara;
+        repted_key += chara;
         count ++;
     }
 
@@ -704,13 +645,14 @@ string Encryptor::VignereCipher(string t_sentenceToGetEncrypted, const string& t
     // encrypting credentials
     string encrypted = "";
     int ascii_of_a = int(Alphabet[0]);
-    char chara_from_message, chara_from_repeated, new_chara;
-    int ascii_of_chara_repeated, ascii_of_chara_message;
+    char chara_from_message, chara_from_repted, new_chara;
+    int ascii_of_chara_repetd, ascii_of_chara_message;
 
     for (int i = 0; i < t_sentenceToGetEncrypted.length(); ++i)
     {
-        // note that both of message and repeated key have the same length
+        // note that both of message and repted key have the same length
         
+
         chara_from_message = t_sentenceToGetEncrypted[i];
         if (chara_from_message == ' ')
         {
@@ -725,20 +667,21 @@ string Encryptor::VignereCipher(string t_sentenceToGetEncrypted, const string& t
 
         ascii_of_chara_message = int(chara_from_message);
 
-        chara_from_repeated = repeated_key[i];
-        ascii_of_chara_repeated = int(chara_from_repeated);
+        chara_from_repted = repted_key[i];
+        ascii_of_chara_repetd = int(chara_from_repted);
         
-        new_chara = ascii_of_a +  (Mod((ascii_of_chara_message + ascii_of_chara_repeated), 26));
+        new_chara = ascii_of_a +  (Mod((ascii_of_chara_message + ascii_of_chara_repetd), 26));
         encrypted += new_chara;
     }
 
     // return the encrypted message
     return encrypted;
+
 }
 
 
 /**
- * @brief The basic function used by object to encrypt instance attribute
+ * @brief The Basic Encyrpting that object uses to encrypte instance attribute
  * @details This function is based on the overloaded version: look above
  */
 void Encryptor::VignereCipher(const string& t_key)

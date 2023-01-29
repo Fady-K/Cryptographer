@@ -44,15 +44,14 @@ int main()
     // Testing all ciphers
     
     // affince cipher decryption
-    Decryptor d("TENNC JRCS BTE CBTE WYZE");
+    Encryptor e("hello from the other side");
 
     // corret output: hello from the other side
-    d.AffineCipher();
+    e.AffineCipher(5, 10);
 
     // show 
-    cout << d.GetDecryptedSentence() << endl;
+    cout << e << endl;
 
-    cout << d << endl;
 
     return 0;
 }
