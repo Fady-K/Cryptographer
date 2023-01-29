@@ -706,9 +706,7 @@ string Encryptor::VignereCipher(string t_sentenceToGetEncrypted, const string& t
 
     for (int i = 0; i < t_sentenceToGetEncrypted.length(); ++i)
     {
-        // note that both of message and repted key have the same length
-        
-
+        // note that both of message and repeated key have the same length
         chara_from_message = t_sentenceToGetEncrypted[i];
         if (chara_from_message == ' ')
         {
@@ -732,7 +730,6 @@ string Encryptor::VignereCipher(string t_sentenceToGetEncrypted, const string& t
 
     // return the encrypted message
     return encrypted;
-
 }
 
 
@@ -775,7 +772,6 @@ istream& operator>>(istream& input, Encryptor& encryptor)
 
     // return istream refefrence (incase there is more than one >> )
     return input;
-
 }
 
 
