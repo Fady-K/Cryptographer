@@ -182,7 +182,7 @@ inline string Encryptor::GetId() const {return m_Id; }
  * @return true 
  * @return false 
  */
-inline bool Encryptor::IsSentenceGotEncrpyted() const { return m_IsEncrypted; }
+inline bool Encryptor::IsSentenceGotEncrypted() const { return m_IsEncrypted; }
 
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -205,7 +205,7 @@ string Encryptor::AffineCipher (string t_sentenceToGetEncrypted, const int& a, c
     for (auto &c: t_sentenceToGetEncrypted) c = toupper(c);
     
     // initiallize the Alphabet to fetch the chara position
-    string encrpyted;
+    string encrypted;
 
     int positionInAlphabet, newPosition;
     char newChar;
@@ -219,23 +219,68 @@ string Encryptor::AffineCipher (string t_sentenceToGetEncrypted, const int& a, c
         // check if the char is space, add space to encrypted char and continue
         if (chara == ' ')
         {
-            encrpyted += " ";
+            encrypted += " ";
             continue;
         }
         else
         {
-            // if not then fetch the char index from Alphabet (x), then  use the following foumla to get the new index >> (5x + 8)
-            positionInAlphabet = Alphabet.find(chara);  
+            try
+            {
+                // if not then fetch the char index from Alphabet (x), then  use the following foumla to get the new index >> (5x + 8)
+                positionInAlphabet = Alphabet.find(chara);
 
-            // it's guranted that newPosition will be positive therefore i used the regulare division reminder >> %
-            newPosition = ((a * positionInAlphabet) + b) % 26;
-            newChar = Alphabet[newPosition];
-            encrpyted += newChar;
+                // check for position validaty in alphabet
+                if (!(positionInAlphabet >= 0 && positionInAlphabet <= 25))
+                {
+                    throw(EncryptorExceptions("Invalid Alphabet Index, You Have Entered A None Alphabet letter!"));
+                }  
+                // check for a range, valid range(0, 25);
+                else if (!(a >= 0 && a <= 25))
+                {
+                    // handel the exception
+                    throw(EncryptorExceptions("Constant a is out of valid range 0 : 25 !"));
+                }
+                
+                // check for b value, valid value {1,3,5,7,9,11,15,17,19,21,23,25}
+                // invalid if b is even or not in valid range or b == 13
+                else if ((b % 2 == 0) || !(b >= 0 && b <= 25) || (b == 13))
+                {
+                    // throw encryptor error exception
+                    throw(EncryptorExceptions("Constant b is a not valid!, Accepted values {1,3,5,7,9,11,15,17,19,21,23,25}"));
+                }
+                else
+                {
+                    try
+                    {
+                        // it's guranted that newPosition will be positive therefore i used the regulare division reminder >> %
+                        newPosition = ((a * positionInAlphabet) + b) % 26;
+                        newChar = Alphabet[newPosition];
+                        encrypted += newChar;
+                    }
+                    catch(...)
+                    {
+                        // exit failure
+                        fprintf(stderr, "Affine Cipher() failed in file %s at line # %d\n", __FILE__,__LINE__);
+
+                        // general purpose exception
+                        cout << "!! Can't find an encrypted equivalent !!" << endl;
+
+                        // exits
+                        exit(EXIT_FAILURE);
+                    }
+                }
+            }
+            catch(EncryptorExceptions e)
+            {
+                fprintf(stderr, "Affine Cipher() failed in file %s at line # %d\n", __FILE__,__LINE__);
+                cout << e.what() << endl;
+                exit(EXIT_FAILURE);
+            }
         }
     }
 
     // return the encrypted message
-    return encrpyted;
+    return encrypted;
 }
 
 
