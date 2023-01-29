@@ -44,10 +44,10 @@ int main()
     // Testing all ciphers
     
     // affince cipher decryption
-    Encryptor e("345");
+    Encryptor e("hello from the other side");
 
     // corret output: hello from the other side
-    e.CaesarCipher(20);
+    e.SimpleSubstitutionCipher("esxqma45vbdrwtjczknphoifly");
 
     // // test atpash cipher
     // e.AtpashCipher();

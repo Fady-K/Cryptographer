@@ -232,7 +232,7 @@ string Encryptor::AffineCipher (string t_sentenceToGetEncrypted, const int& a, c
                 // check for position validaty in alphabet
                 if (!(positionInAlphabet >= 0 && positionInAlphabet <= 25))
                 {
-                    throw(EncryptorExceptions("Invalid Alphabet Index, You Have Entered A None Alphabet letter!"));
+                    throw(EncryptorExceptions("Invalid Alphabet Index, You Have Entered A Non Alphabet letter!"));
                 }  
                 // check for a range, valid range(0, 25);
                 else if (!(a >= 0 && a <= 25))
@@ -436,7 +436,7 @@ string Encryptor::BaconianCipher(string t_sentenceToGetEncrypted) const
                 // check if a valid index
                 if (!(position_in_alphabet >= 0 && position_in_alphabet <= 25))
                 {
-                    throw(EncryptorExceptions("Invalid Alphabet Index, You Have Entered A None Alphabet letter!"));
+                    throw(EncryptorExceptions("Invalid Alphabet Index, You Have Entered A Non Alphabet letter!"));
                 } 
                 else
                 {
@@ -538,7 +538,7 @@ string Encryptor::CaesarCipher(string t_sentenceToGetEncrypted, const int& shift
                 // check if a valid index
                 if (!(position_in_alphabet >= 0 && position_in_alphabet <= 25))
                 {
-                    throw(EncryptorExceptions("Invalid Alphabet Index, You Have Entered A None Alphabet letter!"));
+                    throw(EncryptorExceptions("Invalid Alphabet Index, You Have Entered A Non Alphabet letter!"));
                 }
                 // check if valid shift
                 // shift valid range 0: 25
@@ -749,12 +749,12 @@ string Encryptor::SimpleSubstitutionCipher(string t_sentenceToGetEncrypted, cons
         /*
          * key constraints
          * length == 26
-         * can't include special characters
+         * can't include special characters or digits
         */
 
         if (!IsComprisedOfAbc(t_key))
         {
-            throw(EncryptorExceptions("Key must be compirsed alphabet letter only, can't have special characters or digits!"));
+            throw(EncryptorExceptions("Key must be comprised alphabet letter only, can't have special characters or digits!"));
         }
         else if (t_key.length() != 26)
         {
@@ -803,7 +803,7 @@ string Encryptor::SimpleSubstitutionCipher(string t_sentenceToGetEncrypted, cons
                         if (!(position_in_alphabet >= 0 && position_in_alphabet <= 25))
                         {
                             // throw out of range error
-                            throw(EncryptorExceptions("You have entered a character that has no equvilant in encrypted alphabet, (special characters can't be encoded)!"));
+                            throw(EncryptorExceptions("You have entered a character that has no equivalent in encrypted alphabet, (special characters cannot be encoded)!"));
 
                         }
                         else
@@ -891,63 +891,133 @@ void Encryptor::SimpleSubstitutionCipher(const string& t_key)
  */
 string Encryptor::VignereCipher(string t_sentenceToGetEncrypted, const string& t_key) const
 {
-    // conver all the message's letters into uppercase
-    for (auto &c: t_sentenceToGetEncrypted) c = toupper(c);
+    /* encrypting credentials */
 
-
-    // tmp version of key to convert it into upper cases (to make insencetive to case)
-    string key = t_key;
-
-    //conver all the key's letter into uppercase
-    for (auto &c: key) c = toupper(c);
+    // to store a copy from const key (parameter)
+    string key;
     
-    // counter
-    int count = 0;
+    // char counter
+    int counter = 0;
 
     // to store repeated key
     string repeated_key;
 
-    for (int i = 0; i < t_sentenceToGetEncrypted.length(); ++i)
-    {
-        if (count > key.length() - 1)
-        {
-            count = Mod(count, key.length());
-        }
+    // conver all the message's letters into uppercase
+    for (auto &c: t_sentenceToGetEncrypted) c = toupper(c);
 
-        char chara = key[count];
-        repeated_key += chara;
-        count ++;
+    /* 
+        * key constraints
+        * can't include special characters or digits
+    */
+    try
+    {
+        // check key validation
+        if (!IsComprisedOfAbc(t_key))
+        {
+            // throw EncryptorExcpetion
+            throw(EncryptorExceptions("Key must be comprised of alphabet letters only, can't have special characters or digits!"));
+        }
+        else
+        {
+            // tmp version of key to convert it into upper cases (to make insencetive to case)
+            key = t_key;
+        }
+    }
+    catch(EncryptorExceptions e)
+    {
+        // exception cause
+        fprintf(stderr, "VignereCipher() failed in file %s at line # %d\n", __FILE__, __LINE__);
+
+        // error message
+        cout << e.what() << endl;
+
+        // exit failure
+        exit(EXIT_FAILURE);
+    }
+    catch(exception e)
+    {
+        // exception cause
+        fprintf(stderr, "VignereCipher() failed in file %s at line # %d\n", __FILE__, __LINE__);
+
+        // error message (general)
+        cout << e.what() << endl;
+
+        // exit failure
+        exit(EXIT_FAILURE);
     }
 
+    // convert all the key's letters into uppercase
+    for (auto &c: key) c = toupper(c);
 
-    // encrypting credentials
-    string encrypted = "";
-    int ascii_of_a = int(Alphabet[0]);
-    char chara_from_message, chara_from_repeated, new_chara;
-    int ascii_of_chara_repeated, ascii_of_chara_message;
-
-    for (int i = 0; i < t_sentenceToGetEncrypted.length(); ++i)
+    try
     {
-        // note that both of message and repeated key have the same length
-        chara_from_message = t_sentenceToGetEncrypted[i];
-        if (chara_from_message == ' ')
+        // form the repeated key
+        for (int i = 0; i < t_sentenceToGetEncrypted.length(); ++i)
         {
-            encrypted += ' ';
-            continue;
+            if (counter > key.length() - 1)
+            {
+                counter = Mod(counter, key.length());
+            }
+
+            char chara = key[counter];
+            repeated_key += chara;
+            counter ++;
         }
-        else if (isdigit(chara_from_message))
+    }
+    catch(exception e)
+    {
+        // exception cause
+        fprintf(stderr, "VignereCipher() failed in file %s at line # %d\n", __FILE__, __LINE__);
+
+        // error message
+        cout << e.what() << endl;
+
+        // exit failure
+        exit(EXIT_FAILURE);
+    }
+
+        // encryption credentials
+        string encrypted = "";
+        int ascii_of_a = int(Alphabet[0]);
+        char chara_from_message, chara_from_repeated, new_chara;
+        int ascii_of_chara_repeated, ascii_of_chara_message;
+
+    try
+    {
+        for (int i = 0; i < t_sentenceToGetEncrypted.length(); ++i)
         {
-            encrypted += chara_from_message;
-            continue;
+            // note that both of message and repeated key have the same length
+            chara_from_message = t_sentenceToGetEncrypted[i];
+            if (chara_from_message == ' ')
+            {
+                encrypted += ' ';
+                continue;
+            }
+            else if (isdigit(chara_from_message))
+            {
+                encrypted += chara_from_message;
+                continue;
+            }
+
+            ascii_of_chara_message = int(chara_from_message);
+
+            chara_from_repeated = repeated_key[i];
+            ascii_of_chara_repeated = int(chara_from_repeated);
+            
+            new_chara = ascii_of_a +  (Mod((ascii_of_chara_message + ascii_of_chara_repeated), 26));
+            encrypted += new_chara;
         }
+    }
+    catch(exception e)
+    {
+        // exception cause
+        fprintf(stderr, "VignereCipher() failed in file %s at line # %d\n", __FILE__, __LINE__);
 
-        ascii_of_chara_message = int(chara_from_message);
+        // error message
+        cout << e.what() << endl;
 
-        chara_from_repeated = repeated_key[i];
-        ascii_of_chara_repeated = int(chara_from_repeated);
-        
-        new_chara = ascii_of_a +  (Mod((ascii_of_chara_message + ascii_of_chara_repeated), 26));
-        encrypted += new_chara;
+        // exit failure
+        exit(EXIT_FAILURE);
     }
 
     // return the encrypted message
