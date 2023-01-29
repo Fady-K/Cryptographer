@@ -46,30 +46,30 @@ int main()
     // affince cipher decryption
     Encryptor e("hello from the other side");
 
-    // corret output: hello from the other side
-    e.AffineCipher(5, 10);
+    // // corret output: hello from the other side
+    // e.AffineCipher(5, 10);
 
-    // test atpash cipher
-    e.AtpashCipher();
+    // // test atpash cipher
+    // e.AtpashCipher();
 
-    // test Baconian cipher
-    e.BaconianCipher();
+    // // test Baconian cipher
+    // e.BaconianCipher();
 
-    // ceasar cipher generic version
-    e.CaesarCipher();
+    // // ceasar cipher generic version
+    // e.CaesarCipher();
 
-    // with another shift
-    e.CaesarCipher(21);
+    // // with another shift
+    // e.CaesarCipher(21);
 
-    // testing morse code
-    e.MorseCode();
+    // // testing morse code
+    // e.MorseCode();
 
-    // generic version
-    e.SimpleSubstitutionCipher("hello");
+    // // generic version
+    // e.SimpleSubstitutionCipher("hello");
 
-    // generic version
-    e.VignereCipher("hello");
-    // show 
+    // // generic version
+    // e.VignereCipher("hello");
+    // // show 
     cout << e << endl;
 
 
