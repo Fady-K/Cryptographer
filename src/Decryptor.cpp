@@ -141,36 +141,89 @@ bool Decryptor::IsSentenceGotDecrypted() const { return m_IsDecrypted; }
  * @param t_sentence encrypted sentence
  * @return string decrypted sentence
  */
-string Decryptor::AffineCipher(string t_sentence, const int& c, const int& b) const 
+string Decryptor::AffineCipher(string t_sentence, const int& a, const int& b) const 
 {
     string decrypted = "";
     int a_inv = 0;
     int flag = 0;
      
-    //Find a^-1 (the multiplicative inverse of a
-        //in the group of integers modulo m.)
-    for (int i = 0; i < 26; i++)
+    /*
+        * c and b constraints
+        * a valid range: 0: 25
+        * b valid values {1, 3, 5, 7, 9, 11, 15, 17, 19, 21}
+    
+    */
+    try
     {
-        flag = (c * i) % 26;
-         
-        //Check if (a*i)%26 == 1,
-                //then i will be the multiplicative inverse of a
-        if (flag == 1)
+        // check for a range, valid range(0, 25);
+        if (!(a >= 0 && a <= 25))
         {
-            a_inv = i;
+            // handel the exception
+            throw(DecryptorExceptions("Constant a is out of valid range 0 : 25 !"));
+        }
+        else if ((b % 2 == 0) || !(b >= 0 && b <= 25) || (b == 13))
+        {
+            // throw Decryptor exception
+            throw(DecryptorExceptions("Constant b is a not valid!, Accepted values {1,3,5,7,9,11,15,17,19,21,23,25}"));
+        }
+        else
+        {
+            //Find a^-1 (the multiplicative inverse of a
+            //in the group of integers modulo m.)
+            for (int i = 0; i < 26; i++)
+            {
+                flag = (a * i) % 26;
+                
+                //Check if (a*i)%26 == 1,
+                        //then i will be the multiplicative inverse of a
+                if (flag == 1)
+                {
+                    a_inv = i;
+                }
+            }
         }
     }
-    for (int i = 0; i < t_sentence.length(); i++)
+    catch(DecryptorExceptions e)
     {
-        if(t_sentence[i]!=' ')
-            /*Applying decryption formula a^-1 ( x - b ) mod m
-            {here x is t_sentence[i] and m is 26} and added 'A'
-            to bring it in range of ASCII alphabet[ 65-90 | A-Z ] */
-            decrypted = decrypted +
-                       (char) (((a_inv * ((t_sentence[i]+'A' - b)) % 26)) + 'A');
-        else
-            //else simply append space character
-            decrypted += t_sentence[i];
+        // exception cause
+        fprintf(stderr, "AffineCipher() faild in file %s at line # %d\n", __FILE__, __LINE__);
+
+        // error message
+        cout << e.what() << endl;
+
+        // exit failure
+        exit(EXIT_FAILURE);
+    }
+    
+    try
+    {
+        // convert sentence upper case to overcome case sensitivity
+        for (auto& c: t_sentence) c = toupper(c);
+    
+        // start decrypting process
+        for (int i = 0; i < t_sentence.length(); i++)
+        {
+            if(isalpha(t_sentence[i]))
+                /*Applying decryption formula a^-1 ( x - b ) mod m
+                {here x is t_sentence[i] and m is 26} and added 'A'
+                to bring it in range of ASCII alphabet[ 65-90 | A-Z ] */
+                decrypted = decrypted +
+                        (char) (((a_inv * ((t_sentence[i]+'A' - b)) % 26)) + 'A');
+            else
+                //else simply append space character
+                decrypted += t_sentence[i];
+        }
+    }
+    catch(exception e)
+    {
+        // exception cause
+        fprintf(stderr, "AffineCipher() faild in file %s at line # %d\n", __FILE__, __LINE__);
+
+        // error message (not a custom excpetion)
+        cout << e.what() << endl;
+
+        // exit failure
+        exit(EXIT_FAILURE);
     }
  
     // return the decrypted message
@@ -178,10 +231,10 @@ string Decryptor::AffineCipher(string t_sentence, const int& c, const int& b) co
 }
 
 
-void Decryptor::AffineCipher(const int& c, const int& b)
+void Decryptor::AffineCipher(const int& a, const int& b)
 {
     // dry
-    m_DecryptedSentence = Decryptor::AffineCipher(this->m_OriginalSenctence, c, b);
+    m_DecryptedSentence = Decryptor::AffineCipher(this->m_OriginalSenctence, a, b);
 
     // cipher used in decrypting process: affine cipher
     m_UsedCipher = "Affine Cipher";
