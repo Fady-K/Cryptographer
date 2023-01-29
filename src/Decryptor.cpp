@@ -419,22 +419,79 @@ string Decryptor::CaesarCipher(string t_sentenceToGetDecrypted, const int& t_shi
     int position_in_abc, new_position;
     string decrypted;
 
-    for (int i = 0; i < t_sentenceToGetDecrypted.length(); ++i){
-        char character = t_sentenceToGetDecrypted[i];
-        if (isspace(character) || (isdigit(character)))
+    try
+    {
+        // validate shift before start decoding
+        // note: shift valid range 0: 25
+        if (!(t_shift >= 0 && t_shift <= 25))           // if not in valid range
         {
-            decrypted += character;
-            continue;
+            throw(DecryptorExceptions("Shift is out of valid range 0: 25!"));
         }
         else
         {
-            position_in_abc = abc.find(character);
-            new_position = Mod((position_in_abc - t_shift), 26);
-            decrypted += abc[new_position];
-        }
-    }
+            for (int i = 0; i < t_sentenceToGetDecrypted.length(); ++i)
+            {
+                char character = t_sentenceToGetDecrypted[i];
+                if (!isalpha(t_sentenceToGetDecrypted[i]))
+                {
+                    decrypted += character;
+                }
+                else
+                {
+                    try
+                    {
+                        // fetch it's position in abc
+                        position_in_abc = abc.find(character);
 
-    // return the decyprted 
+                        // calculate it's new position based on the ecyrption formula f(x) = (x + shift) % 26
+                        new_position = Mod((position_in_abc - t_shift), 26);
+
+                        // fetch the decrypted char , and appended to the decrypted string
+                        decrypted += abc[new_position];
+                    }
+                    catch(exception e)
+                    {
+                        // exception cause (where it happend)
+                        fprintf(stderr, "CaesarCipher() failed in file %s at line # %d\n", __FILE__, __LINE__);
+
+                        // error message
+                        cout << e.what() << endl;
+
+                        // exit the program
+                        exit(EXIT_FAILURE);
+
+                    }
+
+                }
+            }
+        }
+       
+    }
+    catch(DecryptorExceptions e)
+    {
+        // exception cause (where it happend)
+        fprintf(stderr, "CaesarCipher() failed in file %s at line # %d\n", __FILE__, __LINE__);
+
+        // error message
+        cout << e.what() << endl;
+
+        // exit the program
+        exit(EXIT_FAILURE);
+
+    }
+    catch(exception e)
+    {
+        // exception cause (where it happend)
+        fprintf(stderr, "CaesarCipher() failed in file %s at line # %d\n", __FILE__, __LINE__);
+
+        // error message
+        cout << e.what() << endl;
+
+        // exit the program
+        exit(EXIT_FAILURE);
+    }
+   
+    // return the decyprted message
     return decrypted;
 }
 
@@ -454,42 +511,71 @@ void Decryptor::CaesarCipher(const int& t_shift)
 
 string Decryptor::MorseCode(string t_sentenceToGetDecrypted) const 
 {   
-
+    // morse codes
     string morse_code[36] = {".-", "-...", "-.-.", "-..", ".", "..-.", "--.", "....", "..", ".---", "-.-", ".-..", "--", "-.", "---", ".--.", "--.-", ".-.", "...", "-", "..-", "...-", ".--", "-..-", "-.--", "--..", "-----", ".----","..---","...--","....-",".....","-....","--....","---..", "----."};
 
+    // add space to sentence which will get decrypted
     t_sentenceToGetDecrypted = t_sentenceToGetDecrypted + ' ';
 
-    // decrypted
+    // decryption credentials
     string decrypted, code;
 
-    for (int i = 0; i < t_sentenceToGetDecrypted.length(); ++i)
+    try
     {
-        if (isspace(t_sentenceToGetDecrypted[i]) == false)
+        // check if the gived string is a morse code or not
+        if (!IsMorseCode(t_sentenceToGetDecrypted))
         {
-            code += t_sentenceToGetDecrypted[i];
+            throw(DecryptorExceptions("Invalid Letter!, Morse-Code is comprised of dots, dashes and spaces only!"));
         }
-        // it's not space >> any way will conver code
         else
         {
-            // iterate over the morse to check whether code in morse or not
-            for (int x = 0; x < 36; ++x)
-            { // code generated from the preivous loop (code) in morse_code, fetch the corresponding char from abc
-                if (code == morse_code[x])
-                {
-                    decrypted += abc[x];
-                    // empty the code again for the next code
-                    code = "";
-                }
-            }
-            // if the char after in the t_sentenceToGetDecrypted is space (two space arow) then append one space
-            if (i != t_sentenceToGetDecrypted.length() + 1)
+            // iterate over each letter to decrypt
+            for (int i = 0; i < t_sentenceToGetDecrypted.length(); ++i)
             {
-                if (isspace(t_sentenceToGetDecrypted[i + 1]))
+                // if not an alphanumric (nither an alphabet nor a digit), then appended any way
+                if (!isspace(t_sentenceToGetDecrypted[i]))
                 {
-                    decrypted += ' ';
+                    code += t_sentenceToGetDecrypted[i];
+                }
+                else
+                {
+                    // iterate over the morse to check whether code in morse or not
+                    for (int x = 0; x < 36; ++x)
+                    { 
+                        // code generated from the preivous loop (code) in morse_code, fetch the corresponding char from abc
+                        if (code == morse_code[x])
+                        {
+                            decrypted += abc[x];
+
+                            // empty the code again for the next code
+                            code = "";
+                        }
+                    }
+
+                    // if the forward char in the t_sentenceToGetDecrypted is space (two spaces in a row) then append one space to decrtypted
+                    if (i != t_sentenceToGetDecrypted.length() + 1)
+                    {
+                        if (isspace(t_sentenceToGetDecrypted[i + 1]))
+                        {
+                            decrypted += ' ';
+                        }
+                    }
                 }
             }
+
         }
+
+    }
+    catch(DecryptorExceptions e)
+    {
+        // exception cause
+        fprintf(stderr, "MorseCode() faild in file %s at line # %d\n", __FILE__, __LINE__);
+
+        // print the error message
+        cout << e.what() << endl;
+
+        // exit the app
+        exit(EXIT_FAILURE);
     }
 
     // return the decrypted
@@ -512,50 +598,108 @@ void Decryptor::MorseCode()
 
 string Decryptor::SimpleSubstitutionCipher(string t_sentenceToGetDecrypted, const string& t_key) const 
 {   
-    // convert into uppercase
-    for (auto &c : t_sentenceToGetDecrypted)
-        c = toupper(c);
+    // empty string to hold decrypted sentence
+    string decrypted = "";
 
-    // take copy from t_key as it's can't be modifed (constant)
-    string key = t_key;
-
-    // key to uppercase
-    for (auto &c : key)
-        c = toupper(c);
-
+    // modifed alphabet
     string modified_abc = "";
 
-    // add key to the begin of modified abc
-    for (int i = 0; i < key.length(); ++i)
+    try
     {
-        modified_abc += key[i];
-    }
+        // convert the message into uppercase
+        for (auto &c : t_sentenceToGetDecrypted) c = toupper(c);
 
-    // call modify function to modify abc
-    ModifyAlphabet(modified_abc,abc, key);
+        /*
+         * key constraints
+         * length == 26
+         * can't include special characters or digits
+        */
 
-    string decrypted = "";
-    // iterate over the t_sentenceToGetDecrypted
-    for (int i = 0; i < t_sentenceToGetDecrypted.length(); ++i)
-    {
-        // get the chara from the t_sentenceToGetDecrypted
-        char chara = t_sentenceToGetDecrypted[i];
-
-        // if chara digit or space append without modifing it
-        if ((chara == ' ') || (isdigit(chara)))
+        if (!IsComprisedOfAbc(t_key))
         {
-            decrypted += chara;
-            continue;
+            throw(DecryptorExceptions("Key must be comprised alphabet letter only, can't have special characters or digits!"));
         }
+        else if (t_key.length() != 26)
+        {
+            // throw invalid range
+            throw(DecryptorExceptions("Key must be comprised of 26 char!"));
 
+        }
         else
         {
-            // get it's position from modifed
-            int position_in_modifed = modified_abc.find(chara);
-            // get the chara which at same index in modified
-            char new_chara =abc[position_in_modifed];
-            decrypted += new_chara;
+            // take copy from t_key as it's can't be modifed (constant)
+            string key = t_key;
+
+            // key to uppercase
+            for (auto &c : key)
+                c = toupper(c);
+
+
+            // add key to the begin of modified abc
+            for (int i = 0; i < key.length(); ++i)
+            {
+                modified_abc += key[i];
+            }
+
+            // call modify function to modify abc
+            ModifyAlphabet(modified_abc,abc, key);
+
+            // iterate over the t_sentenceToGetDecrypted
+            for (int i = 0; i < t_sentenceToGetDecrypted.length(); ++i)
+            {
+                // get the chara from the t_sentenceToGetDecrypted
+                char chara = t_sentenceToGetDecrypted[i];
+
+                // if chara digit or space append without modifing it
+                if (!isalpha(chara))
+                {
+                    decrypted += chara;
+                    continue;
+                }
+
+                else
+                {
+                    try
+                    {
+                        // get it's position from modified
+                        int position_in_modifed = modified_abc.find(chara);
+
+                        if (!(position_in_modifed >= 0 && position_in_modifed <= 25))
+                        {
+                            throw(string());
+                        }
+                        else
+                        {
+                            // get the chara which at same index in modified
+                            char new_chara = abc[position_in_modifed];
+                            decrypted += new_chara;
+                        }
+
+                    }
+                    catch(string())
+                    {
+                        // error cause
+                        fprintf(stderr, "SimpleSubstitutionCipher() proceded with error in file %s at line # line %d\n",__FILE__, __LINE__);
+
+                        // program will processed but this message will be displayed
+                        cout << "You have entered a character that has no equivalent in encrypted alphabet, (special characters cannot be decoded)!" << endl;
+                    }
+                }
+            }
+
         }
+    }
+    catch(DecryptorExceptions e)
+    {
+        // error cause
+        fprintf(stderr, "SimpleSubstitutionCipher() proceded with error in file %s at line # line %d\n",__FILE__, __LINE__);
+
+        // error message
+        cout << e.what() << endl;
+
+        // exit the program
+        exit(EXIT_FAILURE);
+
     }
 
     // return decryted sentence
@@ -644,4 +788,25 @@ int Decryptor::GetIndex(vector<T> v, T target) const
    }
 
    return -1;
+}
+
+
+bool Decryptor::IsMorseCode(const string& s) const 
+{
+    // s is morse code if and only if it's comprised of . and _ including white space
+    // flag to hold the answer
+    bool ans = true;
+
+    // iterate over each letter and check it's not a dot or _ , then it's not a morse code
+    for (int i = 0; i < s.length(); ++i)
+    {
+        if (( s[i] != '-') && (s[i] != '.') && (!isspace(s[i])))
+        {
+            ans = false;
+            break;
+        }
+    }
+
+    // return the ans
+    return ans;
 }

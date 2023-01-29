@@ -65,8 +65,8 @@ public:
     virtual string MorseCode(string t_sentence) const;
     virtual void MorseCode();
 
-    virtual string SimpleSubstitutionCipher(string t_sentence, const string& t_key = "fady") const;
-    virtual void SimpleSubstitutionCipher(const string& t_key = "fady");
+    virtual string SimpleSubstitutionCipher(string t_sentence, const string& t_key = "zyxwvutsrqponmlkjihgfedcba") const;
+    virtual void SimpleSubstitutionCipher(const string& t_key = "zyxwvutsrqponmlkjihgfedcba");
 
     // virtual string VignereCipher(string t_sentence) const;
     // virtual void VignereCipher();
@@ -87,5 +87,6 @@ public:
 protected:
     template <typename T>
     int GetIndex(vector<T> v, T target) const;
+    bool IsMorseCode(const string& s) const;
 };
 
