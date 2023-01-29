@@ -25,7 +25,7 @@ EncryptorExceptions::~EncryptorExceptions(){}
 
 
 
-const char* EncryptorExceptions::what() const 
+const char* EncryptorExceptions::what() const noexcept
 {
     return m_Message.c_str();
 }
