@@ -58,8 +58,8 @@ public:
 
 
     /* Ciphers */
-    virtual string AffineCipher(string t_sentenceToGetEncrypted, const int& a = 1, const int&b = 2) const;           // Affine Cipher
-    virtual void AffineCipher(const int&a = 1, const int& b = 2);                                                    // An overloaded version to encrypt a given sentence
+    virtual string AffineCipher(string t_sentenceToGetEncrypted, const int& a = 1, const int&b = 3) const;           // Affine Cipher
+    virtual void AffineCipher(const int&a = 1, const int& b = 3);                                                    // An overloaded version to encrypt a given sentence
 
     virtual string AtpashCipher(string t_sentenceToGetEncrypted) const;
     virtual void AtpashCipher();
