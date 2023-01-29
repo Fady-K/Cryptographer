@@ -25,7 +25,7 @@ DecryptorExceptions::~DecryptorExceptions(){}
 
 
 
-const char* DecryptorExceptions::what() const 
+const char* DecryptorExceptions::what() const noexcept
 {
     return m_Message.c_str();
 }
