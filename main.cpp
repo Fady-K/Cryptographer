@@ -72,14 +72,37 @@ int main()
     // // // show 
     // cout << e << endl;
 
-
+    //////////////////////////////////
     /* testing Decrypting ciphers */
-    // Encryptor d("hello from here");
+   ///////////////////////////////////
 
-    Decryptor d("SVOOL RZN UZWB PZNZO SLD ZIV BLF GSV XLWV 52421322");
+   /*
+        Main Testing
 
-    d.SimpleSubstitutionCipher();
-    cout << d <<  endl;
+        1. test key or any decoding credentials
+        2. test decoding using an approved coded and decoded string
+        3. 
+
+   */
+
+   // Instantiate object from Decryptor class
+   Decryptor d;
+   cin >> d;
+
+    /* Testing affine cipher 
+
+        * affine cipher decrypts via a and b
+        * a valid range 0: 25
+        * b valid values {1, 3, 5, 7, 9, 11, 15, 17, 19, 20, 21}
+    */
+
+    // d.AffineCipher(-1, -5);
+    // d.AffineCipher(1, 5);
+    cout << d << endl;
+
+
+    
+    
 
 
     return 0;
