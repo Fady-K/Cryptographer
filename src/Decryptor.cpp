@@ -737,7 +737,7 @@ istream& operator>>(istream& input, Decryptor& decryptor)
 {
     // take sentence to get decrypted
     string s;
-    input >> s;
+    getline(input >> ws, s);
 
     // set this s
     decryptor.SetSentence(s);
