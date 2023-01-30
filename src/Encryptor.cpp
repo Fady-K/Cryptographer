@@ -20,12 +20,12 @@ const string Alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
  * @brief Int static variable indicating how many Encryptor object was instantiated from this class.
  * @details It will be incremented as soon as an object be instantaited, including objects with an ended life time.
  */
-int Encryptor::m_NoEncryptors = 0;
+int Encryptor::m_NoObjects = 0;
 
 /**
  * @brief Int static variable indicating to the number of the current Encryptors (life time hasn't ended yet)
  */
-int Encryptor::m_NoCurrentEncyptors = 0;
+int Encryptor::m_CurrentNoObjects = 0;
 
 
 /**
@@ -33,7 +33,7 @@ int Encryptor::m_NoCurrentEncyptors = 0;
  * 
  * @return int No.Encryptors
  */
-int Encryptor::GetTotalNumberOfEncryptorsThisClassMade(){ return m_NoEncryptors; }
+int Encryptor::GetTotalNumberOfObjectsThisClassMade(){ return m_NoObjects; }
 
 
 /**
@@ -41,7 +41,7 @@ int Encryptor::GetTotalNumberOfEncryptorsThisClassMade(){ return m_NoEncryptors;
  * 
  * @return int number of the alive encryptors
  */
-int Encryptor::GetTotalNumberOfTheAliveEncryptors(){return m_NoCurrentEncyptors; }
+int Encryptor::GetTotalNumberOfAliveObjects(){return m_CurrentNoObjects; }
 
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -55,11 +55,11 @@ int Encryptor::GetTotalNumberOfTheAliveEncryptors(){return m_NoCurrentEncyptors;
 Encryptor::Encryptor(): m_OriginalSenctence(""), m_EncryptedSenctence("None"), m_UsedCipher("None"), m_IsEncrypted(false)                           // Default constructor
 {
     // increment number of encryptors by one
-    Encryptor::m_NoEncryptors ++;
-    Encryptor::m_NoCurrentEncyptors ++;
+    Encryptor::m_NoObjects ++;
+    Encryptor::m_CurrentNoObjects ++;
 
     // encryptor id is comprisd of the prefix ENC+NoEncryptors
-    m_Id = Encryptor::GenerateId(Encryptor::m_NoEncryptors);
+    m_Id = Encryptor::GenerateId(Encryptor::m_NoObjects);
 
 }
 
@@ -72,11 +72,11 @@ Encryptor::Encryptor(): m_OriginalSenctence(""), m_EncryptedSenctence("None"), m
 Encryptor::Encryptor(string t_sentence): m_OriginalSenctence(t_sentence), m_EncryptedSenctence("None"), m_UsedCipher("None"), m_IsEncrypted(false)
 {
     // increment number of encryptors by one
-    Encryptor::m_NoEncryptors ++;
-    Encryptor::m_NoCurrentEncyptors ++;
+    Encryptor::m_NoObjects ++;
+    Encryptor::m_CurrentNoObjects ++;
 
     // encryptor id is comprisd of the prefix ENC+NoEncryptors
-    m_Id = Encryptor::GenerateId(Encryptor::m_NoEncryptors);
+    m_Id = Encryptor::GenerateId(Encryptor::m_NoObjects);
     
 
 }
@@ -90,11 +90,11 @@ Encryptor::Encryptor(string t_sentence): m_OriginalSenctence(t_sentence), m_Encr
 Encryptor::Encryptor(const Encryptor& t_anotherEncryptor): m_OriginalSenctence(t_anotherEncryptor.m_OriginalSenctence), m_UsedCipher(t_anotherEncryptor.m_UsedCipher), m_IsEncrypted( t_anotherEncryptor.m_IsEncrypted), m_EncryptedSenctence(t_anotherEncryptor.m_EncryptedSenctence)
 {
     // increment number of encryptors by one
-    Encryptor::m_NoEncryptors ++;
-    Encryptor::m_NoCurrentEncyptors ++;
+    Encryptor::m_NoObjects ++;
+    Encryptor::m_CurrentNoObjects ++;
 
     // encryptor id is comprisd of the prefix ENC+NoEncryptors
-    m_Id = Encryptor::GenerateId(Encryptor::m_NoEncryptors);
+    m_Id = Encryptor::GenerateId(Encryptor::m_NoObjects);
 }
 
 
@@ -127,7 +127,7 @@ Encryptor& Encryptor::operator=(const Encryptor& t_anotherEncryptor)
 Encryptor::~Encryptor()
 {
     // decrement the current number of life encryptors by one as this has just died
-    m_NoCurrentEncyptors --;
+    m_CurrentNoObjects --;
 }
 
 
@@ -141,7 +141,7 @@ Encryptor::~Encryptor()
  * 
  * @param t_senctence A sentence to get encrpted
  */
-inline void Encryptor::SetSentenceToEncrypt(string t_senctence) { m_OriginalSenctence = t_senctence; }
+inline void Encryptor::SetSentence(string t_senctence) { m_OriginalSenctence = t_senctence; }
 
 
 /**
@@ -191,24 +191,21 @@ inline bool Encryptor::IsSentenceGotEncrpyted() const { return m_IsEncrypted; }
 
 
 /**
- * @brief This function takes a sentence from user then encrypts it using Affine cipher
- * @details For details on affice cipher check this link: https://en.wikipedia.org/wiki/Affine_cipher
+ * @brief This function takes a sentence from user and encrypts it using Affine cipher
+ * @details For more details on affice cipher check this link: https://en.wikipedia.org/wiki/Affine_cipher
  * @details this function doesn't deal with the instance attributes, it's an overload for the basic one 
  * @param t_sentenceToGetEncrypted Original sentence (will be encrypted)
- * @return string Senctenc after being encrypted (Encrypted sentence)
+ * @param a First constant in encrypting formula (a x + b) mod 26
+ * @param b Second constant in encryping formula  (a x + b) mod 26
+ * @return string Sentence after being encrypted (Encrypted sentence) 
  */
-string Encryptor::EncryptUsingAffineCipher (string t_sentenceToGetEncrypted) const
+string Encryptor::AffineCipher (string t_sentenceToGetEncrypted, const int& a, const int& b) const
 {
-    // take a, b, c from the user 
-    cout << "Enter The value of (a, b) Where (a*x + b) % 26 Is The Formula of Encryption: ";
-    int a, b;
-    cin >> a >> b;
-
     // convert all the message's letters into uppercase
     for (auto &c: t_sentenceToGetEncrypted) c = toupper(c);
     
     // initiallize the Alphabet to fetch the chara position
-    string encrpyted;
+    string encrypted;
 
     int positionInAlphabet, newPosition;
     char newChar;
@@ -222,34 +219,81 @@ string Encryptor::EncryptUsingAffineCipher (string t_sentenceToGetEncrypted) con
         // check if the char is space, add space to encrypted char and continue
         if (chara == ' ')
         {
-            encrpyted += " ";
+            encrypted += " ";
             continue;
         }
         else
         {
-            // if not then fetch the char index from Alphabet (x), then  use the following foumla to get the new index >> (5x + 8)
-            positionInAlphabet = Alphabet.find(chara);  
+            try
+            {
+                // if not then fetch the char index from Alphabet (x), then  use the following foumla to get the new index >> (5x + 8)
+                positionInAlphabet = Alphabet.find(chara);
 
-            // it's guranted that newPosition will be positive therefore i used the regulare division reminder >> %
-            newPosition = ((a * positionInAlphabet) + b) % 26;
-            newChar = Alphabet[newPosition];
-            encrpyted += newChar;
+                // check for position validaty in alphabet
+                if (!(positionInAlphabet >= 0 && positionInAlphabet <= 25))
+                {
+                    throw(EncryptorExceptions("Invalid Alphabet Index, You Have Entered A Non Alphabet letter!"));
+                }  
+                // check for a range, valid range(0, 25);
+                else if (!(a >= 0 && a <= 25))
+                {
+                    // handel the exception
+                    throw(EncryptorExceptions("Constant a is out of valid range 0 : 25 !"));
+                }
+                
+                // check for b value, valid value {1,3,5,7,9,11,15,17,19,21,23,25}
+                // invalid if b is even or not in valid range or b == 13
+                else if ((b % 2 == 0) || !(b >= 0 && b <= 25) || (b == 13))
+                {
+                    // throw encryptor error exception
+                    throw(EncryptorExceptions("Constant b is a not valid!, Accepted values {1,3,5,7,9,11,15,17,19,21,23,25}"));
+                }
+                else
+                {
+                    try
+                    {
+                        // it's guranted that newPosition will be positive therefore i used the regulare division reminder >> %
+                        newPosition = ((a * positionInAlphabet) + b) % 26;
+                        newChar = Alphabet[newPosition];
+                        encrypted += newChar;
+                    }
+                    catch(...)
+                    {
+                        // exit failure
+                        fprintf(stderr, "Affine Cipher() failed in file %s at line # %d\n", __FILE__,__LINE__);
+
+                        // general purpose exception
+                        cout << "!! Can't find an encrypted equivalent !!" << endl;
+
+                        // exits
+                        exit(EXIT_FAILURE);
+                    }
+                }
+            }
+            catch(EncryptorExceptions e)
+            {
+                fprintf(stderr, "Affine Cipher() failed in file %s at line # %d\n", __FILE__,__LINE__);
+                cout << e.what() << endl;
+                exit(EXIT_FAILURE);
+            }
         }
     }
 
     // return the encrypted message
-    return encrpyted;
+    return encrypted;
 }
 
 
 /**
- * @brief The Basic Encyrpting that object uses to encrypte instance attribute
+ * @brief The basic function used by object to encrypt instance attribute
  * @details This function is based on the overloaded version: look above
+ * @param a First constant in encrypting formula (a x + b) mod 26
+ * @param b Second constant in encryping formula  (a x + b) mod 26
  */
-void Encryptor::EncryptUsingAffineCipher()
+void Encryptor::AffineCipher(const int& a, const int& b)
 {
     // dry
-    m_EncryptedSenctence = Encryptor::EncryptUsingAffineCipher(m_OriginalSenctence);
+    m_EncryptedSenctence = Encryptor::AffineCipher(m_OriginalSenctence, a, b);
 
     // cipher used in encryption process: affine cipher
     m_UsedCipher = "Affine Cipher";
@@ -260,13 +304,13 @@ void Encryptor::EncryptUsingAffineCipher()
 
 
 /**
- * @brief This function takes a sentence from user then encrypts it using atpash cipher
- * @details For details on affice cipher check this link: https://en.wikipedia.org/wiki/Atpash_cipher
+ * @brief This function takes a sentence from user and encrypts it using atpash cipher
+ * @details For more details on atpash cipher check this link: https://en.wikipedia.org/wiki/Atpash_cipher
  * @details this function doesn't deal with the instance attributes, it's an overload for the basic one 
  * @param t_sentenceToGetEncrypted Original sentence (will be encrypted)
  * @return string Senctenc after being encrypted (Encrypted sentence)
  */
-string Encryptor::EncryptUsingAtpashCipher(string t_sentenceToGetEncrypted) const
+string Encryptor::AtpashCipher(string t_sentenceToGetEncrypted) const
 {
     // store space'index
     string message_without_space;
@@ -305,7 +349,6 @@ string Encryptor::EncryptUsingAtpashCipher(string t_sentenceToGetEncrypted) cons
         int position_in_Alphabet = Alphabet.find(chara);
 
         // get the equivilant encrpted char of inverted Alphabet
-        
         encrypted += inverted_alphabet[position_in_Alphabet];
     }
 
@@ -334,12 +377,12 @@ string Encryptor::EncryptUsingAtpashCipher(string t_sentenceToGetEncrypted) cons
 
 
 /**
- * @brief The Basic Encyrpting that object uses to encrypte instance attribute
+ * @brief The basic function used by object to encrypt instance attribute
  * @details This function is based on the overloaded version: look above
  */
-void Encryptor::EncryptUsingAtpashCipher()
+void Encryptor::AtpashCipher()
 {
-    m_EncryptedSenctence = Encryptor::EncryptUsingAtpashCipher(m_OriginalSenctence);
+    m_EncryptedSenctence = Encryptor::AtpashCipher(m_OriginalSenctence);
 
     // cipher used in encryption process: atpash cipher
     m_UsedCipher = "Atpash Cipher";
@@ -350,18 +393,16 @@ void Encryptor::EncryptUsingAtpashCipher()
 
 
 /**
- * @brief This function takes a sentence from user then encrypts it using Baconian cipher
- * @details For details on affice cipher check this link: https://en.wikipedia.org/wiki/Bacon%27s_cipher
+ * @brief This function takes a sentence from user and encrypts it using Baconian cipher
+ * @details For details on Baconian cipher cipher check this link: https://en.wikipedia.org/wiki/Bacon%27s_cipher
  * @details this function doesn't deal with the instance attributes, it's an overload for the basic one 
  * @param t_sentenceToGetEncrypted Original sentence (will be encrypted)
- * @return string Senctenc after being encrypted (Encrypted sentence)
+ * @return string Sentence after being encrypted (Encrypted sentence)
  */
-string Encryptor::EncryptUsingBaconianCipher(string t_sentenceToGetEncrypted) const
+string Encryptor::BaconianCipher(string t_sentenceToGetEncrypted) const
 {
     // conver all letter's into upper case 
     for(auto &c: t_sentenceToGetEncrypted) c = toupper(c); // actually this not important i could have neglect it by using full lowercase Alphabet instead of upper case one
-
-    // Alphabet >> any string is an array of buffers 
 
     // array cipher
     string code[26] = {"aaaaa ", "aaaab ", "aaaba ", "aaabb ", "aabaa ", "aabab ", "aabba ", "aabbb ", "abaaa ", "abaab ", "ababa ", "ababb ", "abbaa ", "abbab ", "abbba ", "abbbb ", "baaaa ", "baaab ", "baaba ", "baabb ", "babaa ", "babab ", "babba ", "babbb ", "bbaaa ", "bbaab "};
@@ -387,12 +428,51 @@ string Encryptor::EncryptUsingBaconianCipher(string t_sentenceToGetEncrypted) co
         }
         else
         {
-            // fetch it's position from Alphabet
-            int position_in_alphabet = Alphabet.find(chara);
+            try
+            {
+                // fetch it's position from Alphabet
+                int position_in_alphabet = Alphabet.find(chara);
 
-            // get the equivelant from code
-            string coded_chara = code[position_in_alphabet];
-            encrypted += coded_chara;
+                // check if a valid index
+                if (!(position_in_alphabet >= 0 && position_in_alphabet <= 25))
+                {
+                    throw(EncryptorExceptions("Invalid Alphabet Index, You Have Entered A Non Alphabet letter!"));
+                } 
+                else
+                {
+                    try
+                    {
+                        // get the equivelant from code
+                        string coded_chara = code[position_in_alphabet];
+                        encrypted += coded_chara;
+                    }
+                    catch(...)
+                    {
+                        // exit failure
+                        fprintf(stderr, "Baconian Cipher() failed in file %s at line # %d\n", __FILE__,__LINE__);
+
+                        // general purpose exception
+                        cout << "!! Can't find an encrypted equivalent !!" << endl;
+
+                        // exits
+                        exit(EXIT_FAILURE);
+                    }
+
+                } 
+            }
+            // catch the exception
+            catch(EncryptorExceptions e)
+            {
+                // exit failure
+                fprintf(stderr, "Baconian Cipher() failed in file %s at line # %d\n", __FILE__,__LINE__);
+
+                // general purpose exception
+                cout << e.what() << endl;
+
+                // exits
+                exit(EXIT_FAILURE);
+            }
+            
         }
     }
     
@@ -402,12 +482,12 @@ string Encryptor::EncryptUsingBaconianCipher(string t_sentenceToGetEncrypted) co
 
 
 /**
- * @brief The Basic Encyrpting that object uses to encrypte instance attribute
+ * @brief The basic function used by object to encrypt instance attribute
  * @details This function is based on the overloaded version: look above
  */
-void Encryptor::EncryptUsingBaconianCipher()
+void Encryptor::BaconianCipher()
 {
-    m_EncryptedSenctence = Encryptor::EncryptUsingBaconianCipher(m_OriginalSenctence);
+    m_EncryptedSenctence = Encryptor::BaconianCipher(m_OriginalSenctence);
 
     // cipher used in encryption process: Baconian Cipher
     m_UsedCipher = "Baconian Cipher";
@@ -418,21 +498,17 @@ void Encryptor::EncryptUsingBaconianCipher()
 
 
 /**
- * @brief This function takes a sentence from user then encrypts it using Caesar Cipher
+ * @brief This function takes a sentence from user and encrypts it using Caesar Cipher
  * @details For a more details about caesar cipher check this link: https://en.wikipedia.org/wiki/Caesar_cipher
  * @details this function doesn't deal with the instance attributes, it's an overload for the basic one 
  * @param t_sentenceToGetEncrypted Original sentence (will be encrypted)
- * @return string Senctenc after being encrypted (Encrypted sentence)
+ * @param shift a required int for the encryption process
+ * @return string Sentence after being encrypted (Encrypted sentence)
  */
-string Encryptor::EncryptUsingCaesarCipher(string t_sentenceToGetEncrypted) const
+string Encryptor::CaesarCipher(string t_sentenceToGetEncrypted, const int& shift) const
 {
     // convert all letter into upper case
     for (auto &c : t_sentenceToGetEncrypted) c = toupper(c);
-
-    // take shift from user
-    cout << "shift: ";
-    int shift;
-    cin >> shift;
     
     // encrypting credentials
     int position_in_alphabet, new_position;
@@ -440,35 +516,99 @@ string Encryptor::EncryptUsingCaesarCipher(string t_sentenceToGetEncrypted) cons
     char encrypted;
 
     // iterate over each char in original and encrypt it
-    for (int i = 0; i < t_sentenceToGetEncrypted.length(); ++i){
+    for (int i = 0; i < t_sentenceToGetEncrypted.length(); ++i)
+    {
+        // equivalant chararcter
         char character = t_sentenceToGetEncrypted[i];
-        if (isspace(character) || (isdigit(character)))
+
+        // caesar cipher encrypts only alphabet, there fore any thing else won't be encryted
+        if (!isalpha(character))
         {
             encrpted_message += character;
-            continue;
         }
         else
         {
-            position_in_alphabet = Alphabet.find(character);
-            new_position = Mod((position_in_alphabet + shift), 26);
-            encrypted = Alphabet[new_position];
-            encrpted_message += encrypted;
+            try
+            {
+                // encrypt it using  caeser cipher
+                // fetch it's position from Alphabet
+                position_in_alphabet = Alphabet.find(character);
+
+                // check if a valid index
+                if (!(position_in_alphabet >= 0 && position_in_alphabet <= 25))
+                {
+                    throw(EncryptorExceptions("Invalid Alphabet Index, You Have Entered A Non Alphabet letter!"));
+                }
+                // check if valid shift
+                // shift valid range 0: 25
+                else if (!(shift >= 0 && shift <= 25))
+                {
+                    // throw a out of range error
+                    throw(EncryptorExceptions("Shift is out of valid range 0: 25!"));
+                } 
+                else
+                {
+                    try
+                    {
+                        // encrypt this char
+                        new_position = Mod((position_in_alphabet + shift), 26);
+                        encrypted = Alphabet[new_position];
+                        encrpted_message += encrypted;
+                    }
+                    catch(...)
+                    {
+                        // exit failure
+                        fprintf(stderr, "Baconian Cipher() failed in file %s at line # %d\n", __FILE__,__LINE__);
+
+                        // general purpose exception
+                        cout << "!! Can't find an encrypted equivalent !!" << endl;
+
+                        // exits
+                        exit(EXIT_FAILURE);     
+                    }
+
+                }
+            } 
+            catch(EncryptorExceptions e)
+            {
+                // cause for failure
+                fprintf(stderr, "Caesar Cipher() failed in file %s at line # %d\n", __FILE__,__LINE__);
+
+                // general purpose exception
+                cout << e.what() << endl;
+
+                // exits
+                exit(EXIT_FAILURE);
+            }
+            catch(...)
+            {
+                // exit failure
+                fprintf(stderr, "Baconian Cipher() failed in file %s at line # %d\n", __FILE__,__LINE__);
+
+                // general purpose exception
+                cout << "!! Baconian Cipher Failed !!" << endl;
+
+                // exits
+                exit(EXIT_FAILURE);            
+            }
+
         }
     }
 
     // return the encrypted message
     return encrpted_message;
-   
 }
 
 
 /**
- * @brief The Basic Encyrpting that object uses to encrypte instance attribute
+ * @brief The basic function used by object to encrypt instance attribute
  * @details This function is based on the overloaded version: look above
+ * @details For a more details about caesar cipher check this link: https://en.wikipedia.org/wiki/Caesar_cipher
+ * @param shift a required int for the encryption process
  */
-void Encryptor::EncryptUsingCaesarCipher()
+void Encryptor::CaesarCipher(const int& shift)
 {
-    m_EncryptedSenctence = Encryptor::EncryptUsingCaesarCipher(m_OriginalSenctence);
+    m_EncryptedSenctence = Encryptor::CaesarCipher(m_OriginalSenctence, shift);
 
     // cipher used in encryption process: Caesar Cipher
     m_UsedCipher = "Caesar Cipher";
@@ -479,16 +619,19 @@ void Encryptor::EncryptUsingCaesarCipher()
 
 
 /**
- * @brief This function takes a sentence from user then encrpted using MorseCode
+ * @brief This function takes a sentence from user and encrypt it using MorseCode
  * @details For details on affice cipher check this link: https://en.wikipedia.org/wiki/Morse_code
  * @details this function doesn't deal with the instance attributes, it's an overload for the basic one 
  * @param t_sentenceToGetEncrypted Original sentence (will be encrypted)
- * @return string Senctenc after being encrypted (Encrypted sentence)
+ * @return string Sentence after being encrypted (Encrypted sentence)
  */
-string Encryptor::EncryptUsingMorseCode(string t_sentenceToGetEncrypted) const
+string Encryptor::MorseCode(string t_sentenceToGetEncrypted) const
 {
     // credentials
     string morse_code[36] = {".-", "-...", "-.-.", "-..", ".", "..-.", "--.", "....", "..", ".---", "-.-", ".-..", "--", "-.", "---", ".--.", "--.-", ".-.", "...", "-", "..-", "...-", ".--", "-..-", "-.--", "--..", "-----", ".----","..---","...--","....-",".....","-....","--....","---..", "----."};
+    
+    // alphabet + digits
+    string Alphabet = ::Alphabet + "0123456789";
 
     // conver all the message's letters into uppercase
     for (auto &c : t_sentenceToGetEncrypted) c = toupper(c);
@@ -510,10 +653,47 @@ string Encryptor::EncryptUsingMorseCode(string t_sentenceToGetEncrypted) const
         }
         else
         {
-            // fetch the character's position in abc
-            int position_in_alphabet = Alphabet.find(chara);
-            // get the corresponding morse companitation thereafter concatinate it with encrypted
-            encrypted += morse_code[position_in_alphabet] + ' ';
+            try
+            {
+                // fetch the character's position in abc
+                int position_in_alphabet = Alphabet.find(chara);
+
+                // check if valid char 
+                if (!(position_in_alphabet >=0 && position_in_alphabet <= 36))
+                {
+                    throw(EncryptorExceptions("You have entered character that has no code in morse code table!"));
+                }
+                else
+                {
+                    try
+                    {
+                        // get the corresponding morse companitation thereafter concatinate it with encrypted
+                        encrypted += morse_code[position_in_alphabet] + ' ';
+                    }
+                    catch(exception e)
+                    {
+                        // exception cause
+                        fprintf(stderr, "MorseCode() failed in file %s at line # %d\n", __FILE__,__LINE__);
+
+                        // general message
+                        cout << e.what() << endl;
+
+                        // exit failure
+                        exit(EXIT_FAILURE);
+                    }
+                }
+            }
+            catch(EncryptorExceptions e)
+            {
+                // exit failure
+                fprintf(stderr, "MorseCode() failed in file %s at line # %d\n", __FILE__,__LINE__);
+
+                // general purpose exception
+                cout << e.what() << endl;
+
+                // exits
+                exit(EXIT_FAILURE);            
+            }
         }
     }
 
@@ -531,12 +711,13 @@ string Encryptor::EncryptUsingMorseCode(string t_sentenceToGetEncrypted) const
 
 
 /**
- * @brief The Basic Encyrpting that object uses to encrypte instance attribute
- * @details This function is based on the overloaded version: look above
+ * @brief The basic function used by object to encrypt instance attribute
+ * @details This function is based on the overloaded version: look abovee
+ * @details For details on Morse Code check this link: https://en.wikipedia.org/wiki/Morse_code
  */
-void Encryptor::EncryptUsingMorseCode()
+void Encryptor::MorseCode()
 {
-    m_EncryptedSenctence = Encryptor::EncryptUsingMorseCode(m_OriginalSenctence);
+    m_EncryptedSenctence = Encryptor::MorseCode(m_OriginalSenctence);
 
     // cipher used in encryption process: Morse code
     m_UsedCipher = "Morse Code";
@@ -547,55 +728,137 @@ void Encryptor::EncryptUsingMorseCode()
 
 
 /**
- * @brief This function takes a sentence from user then encrpted using Simple Substitution Cipher
- * @details For details on affice cipher check this link: https://en.wikipedia.org/wiki/Substitution_cipher
+ * @brief This function takes a sentence from user and encrypts it via Simple Substitution Cipher
+ * @details For details on Simple Substitution Cipher check this link: https://en.wikipedia.org/wiki/Substitution_cipher
  * @details this function doesn't deal with the instance attributes, it's an overload for the basic one 
  * @param t_sentenceToGetEncrypted Original sentence (will be encrypted)
- * @return string Senctenc after being encrypted (Encrypted sentence)
+ * @param t_key an essential string for the encryption process
+ * @return string sentence after being encrypted (Encrypted sentence)
  */
-string Encryptor::EncryptUsingSimpleSubstitutionCipher(string t_sentenceToGetEncrypted) const
+string Encryptor::SimpleSubstitutionCipher(string t_sentenceToGetEncrypted, const string& t_key) const
 {
-    // convert the message into uppercase
-    for (auto &c : t_sentenceToGetEncrypted) c = toupper(c);
+    // empty string to hold encryped sentence
+    string encrypted = "";
 
-    // take the key
-    cout << "key: ";
-    string key;
-    getline(cin >> ws, key);
-
-    // convert key into uppercase
-    for (auto &c : key) c = toupper(c);
-
+    // modifed alphabet
     string modified_alphabet = "";
 
-    // add the key letter's to the beggining of the modified abc
-    for (int i = 0; i < key.length(); ++i)
+    try
     {
-        modified_alphabet += key[i];
-    }
+        // convert the message into uppercase
+        for (auto &c : t_sentenceToGetEncrypted) c = toupper(c);
 
-    ModifyAlphabet(modified_alphabet, Alphabet, key);
-    string encrypted = "";
-    // iterate over the message and encrypt
-    for (int i = 0; i < t_sentenceToGetEncrypted.length(); ++i)
-    {
-        char chara = t_sentenceToGetEncrypted[i];
+        /*
+         * key constraints
+         * length == 26
+         * can't include special characters or digits
+        */
 
-        // if the chara existing in the message is space or digit append it without any modification
-        if ((chara == ' ') || (isdigit(chara)))
+        if (!IsComprisedOfAbc(t_key))
         {
-            encrypted += chara;
-            continue;
+            throw(EncryptorExceptions("Key must be comprised alphabet letter only, can't have special characters or digits!"));
         }
+        else if (t_key.length() != 26)
+        {
+            // throw invalid range
+            throw(EncryptorExceptions("Key must be comprised of 26 char!"));
 
-        // if not then encrypt the chara
+        }
         else
         {
-            int position_in_alphabet = Alphabet.find(chara);
-            char new_chara = modified_alphabet[position_in_alphabet];
-            encrypted += new_chara;
+            // tmp version of key to convert it into upper cases (to make insencetive to case)
+            string key = t_key;
+
+            // convert key into uppercase
+            for (auto &c : key) c = toupper(c);
+
+            // add the key letter's to the beggining of the modified abc
+            for (int i = 0; i < key.length(); ++i)
+            {
+                modified_alphabet += key[i];
+            }
+
+            // generate the new alphabet bases the given key
+            ModifyAlphabet(modified_alphabet, Alphabet, key);
+
+            // iterate over the message and encrypt
+            for (int i = 0; i < t_sentenceToGetEncrypted.length(); ++i)
+            {
+                char chara = t_sentenceToGetEncrypted[i];
+
+                // if the chara existing in the message is space or digit append it without any modification
+                if ((chara == ' ') || (isdigit(chara)))
+                {
+                    encrypted += chara;
+                    continue;
+                }
+
+                // if not then encrypt the chara
+                else
+                {
+                    try
+                    {
+                        // fetch position from abc
+                        int position_in_alphabet = Alphabet.find(chara);
+
+                        // check if valid char (in alphabet)
+                        if (!(position_in_alphabet >= 0 && position_in_alphabet <= 25))
+                        {
+                            // throw out of range error
+                            throw(EncryptorExceptions("You have entered a character that has no equivalent in encrypted alphabet, (special characters cannot be encoded)!"));
+
+                        }
+                        else
+                        {
+                            // fetch the equivelant from modified alphabet
+                            char new_chara = modified_alphabet[position_in_alphabet];
+
+                            // append it to encrypted
+                            encrypted += new_chara;
+                        }
+
+                    }
+                    catch(EncryptorExceptions e)
+                    {
+                        // exception cause
+                        fprintf(stderr, "SimpleSubstitutionCipher() faild in file %s at line # %d\n", __FILE__, __LINE__);
+
+                        // error message
+                        cout << e.what() << endl;
+
+                        // exits the program
+                        exit(EXIT_FAILURE);
+                    }
+
+                }
+            }
+
         }
+
     }
+    catch(EncryptorExceptions e)
+    {
+        // exception cause
+        fprintf(stderr, "SimpleSubstitutionCipher() faild in file %s at line # %d\n", __FILE__,__LINE__);
+
+        // error message
+        cout << e.what() << endl;
+
+        // exit failure
+        exit(EXIT_FAILURE);
+    }
+    catch(exception e)
+    {
+        // exception cause
+        fprintf(stderr, "SimpleSubstitutionCipher() faild in file %s at line # %d\n", __FILE__,__LINE__);
+
+        // error message (general one)
+        cout << e.what() << endl;
+
+        // exit failure
+        exit(EXIT_FAILURE);
+    }
+
 
     // return the encrypted message
     return encrypted;
@@ -603,12 +866,14 @@ string Encryptor::EncryptUsingSimpleSubstitutionCipher(string t_sentenceToGetEnc
 
 
 /**
- * @brief The Basic Encyrpting that object uses to encrypte instance attribute
+ * @brief The basic function used by object to encrypt instance attribute
  * @details This function is based on the overloaded version: look above
+ * @details For details on Simple SubstitutionC ipher check this link: https://en.wikipedia.org/wiki/Substitution_cipher
+ * @param t_key an essential string for the encryption process
  */
-void Encryptor::EncryptUsingSimpleSubstitutionCipher()
+void Encryptor::SimpleSubstitutionCipher(const string& t_key)
 {
-    m_EncryptedSenctence = Encryptor::EncryptUsingSimpleSubstitutionCipher(m_OriginalSenctence);
+    m_EncryptedSenctence = Encryptor::SimpleSubstitutionCipher(m_OriginalSenctence, t_key);
 
     // cipher used in encryption process: Simple Substitution Cipher
     m_UsedCipher = "Simple Substitution Cipher";
@@ -619,88 +884,158 @@ void Encryptor::EncryptUsingSimpleSubstitutionCipher()
 
 
 /**
- * @brief This function takes a sentence from user then encrpted using MorseCode
- * @details For details on affice cipher check this link: https://en.wikipedia.org/wiki/Morse_code
- * @details this function doesn't deal with the instance attributes, it's an overload for the basic one 
+ * @brief This function takes a sentence from user, and encrypts it using Vignere Cipher
+ * @details For a more details on Vignere cipher check this link: https://en.wikipedia.org/wiki/Vigen%C3%A8re_cipher
+ * @details This function doesn't deal with the instance attributes, it's an overload for the basic one 
  * @param t_sentenceToGetEncrypted Original sentence (will be encrypted)
- * @return string Senctenc after being encrypted (Encrypted sentence)
+ * @param t_key An essential string for the encrypting process
+ * @return string Sentence after being encrypted (Encrypted sentence)
  */
-string Encryptor::EncryptUsingVignereCipher(string t_sentenceToGetEncrypted) const
+string Encryptor::VignereCipher(string t_sentenceToGetEncrypted, const string& t_key) const
 {
+    /* encrypting credentials */
+
+    // to store a copy from const key (parameter)
+    string key;
+    
+    // char counter
+    int counter = 0;
+
+    // to store repeated key
+    string repeated_key;
+
     // conver all the message's letters into uppercase
     for (auto &c: t_sentenceToGetEncrypted) c = toupper(c);
 
-
-    // take the key from the user
-    cout << "Key: ";
-    string key;
-    getline(cin >> ws, key);
-
-    //conver all the key's letter into uppercase
-    for (auto &c: key) c = toupper(c);
-    
-
-    int count = 0;
-    string repted_key;
-
-    for (int i = 0; i < t_sentenceToGetEncrypted.length(); ++i)
+    /* 
+        * key constraints
+        * can't include special characters or digits
+    */
+    try
     {
-        if (count > key.length() - 1)
+        // check key validation
+        if (!IsComprisedOfAbc(t_key))
         {
-            count = Mod(count, key.length());
+            // throw EncryptorExcpetion
+            throw(EncryptorExceptions("Key must be comprised of alphabet letters only, can't have special characters or digits!"));
         }
+        else
+        {
+            // tmp version of key to convert it into upper cases (to make insencetive to case)
+            key = t_key;
+        }
+    }
+    catch(EncryptorExceptions e)
+    {
+        // exception cause
+        fprintf(stderr, "VignereCipher() failed in file %s at line # %d\n", __FILE__, __LINE__);
 
-        char chara = key[count];
-        repted_key += chara;
-        count ++;
+        // error message
+        cout << e.what() << endl;
+
+        // exit failure
+        exit(EXIT_FAILURE);
+    }
+    catch(exception e)
+    {
+        // exception cause
+        fprintf(stderr, "VignereCipher() failed in file %s at line # %d\n", __FILE__, __LINE__);
+
+        // error message (general)
+        cout << e.what() << endl;
+
+        // exit failure
+        exit(EXIT_FAILURE);
     }
 
+    // convert all the key's letters into uppercase
+    for (auto &c: key) c = toupper(c);
 
-    // encrypting credentials
-    string encrypted = "";
-    int ascii_of_a = int(Alphabet[0]);
-    char chara_from_message, chara_from_repted, new_chara;
-    int ascii_of_chara_repetd, ascii_of_chara_message;
-
-    for (int i = 0; i < t_sentenceToGetEncrypted.length(); ++i)
+    try
     {
-        // note that both of message and repted key have the same length
-        
-
-        chara_from_message = t_sentenceToGetEncrypted[i];
-        if (chara_from_message == ' ')
+        // form the repeated key
+        for (int i = 0; i < t_sentenceToGetEncrypted.length(); ++i)
         {
-            encrypted += ' ';
-            continue;
+            if (counter > key.length() - 1)
+            {
+                counter = Mod(counter, key.length());
+            }
+
+            char chara = key[counter];
+            repeated_key += chara;
+            counter ++;
         }
-        else if (isdigit(chara_from_message))
+    }
+    catch(exception e)
+    {
+        // exception cause
+        fprintf(stderr, "VignereCipher() failed in file %s at line # %d\n", __FILE__, __LINE__);
+
+        // error message
+        cout << e.what() << endl;
+
+        // exit failure
+        exit(EXIT_FAILURE);
+    }
+
+        // encryption credentials
+        string encrypted = "";
+        int ascii_of_a = int(Alphabet[0]);
+        char chara_from_message, chara_from_repeated, new_chara;
+        int ascii_of_chara_repeated, ascii_of_chara_message;
+
+    try
+    {
+        for (int i = 0; i < t_sentenceToGetEncrypted.length(); ++i)
         {
-            encrypted += chara_from_message;
-            continue;
+            // note that both of message and repeated key have the same length
+            chara_from_message = t_sentenceToGetEncrypted[i];
+            if (chara_from_message == ' ')
+            {
+                encrypted += ' ';
+                continue;
+            }
+            else if (isdigit(chara_from_message))
+            {
+                encrypted += chara_from_message;
+                continue;
+            }
+
+            ascii_of_chara_message = int(chara_from_message);
+
+            chara_from_repeated = repeated_key[i];
+            ascii_of_chara_repeated = int(chara_from_repeated);
+            
+            new_chara = ascii_of_a +  (Mod((ascii_of_chara_message + ascii_of_chara_repeated), 26));
+            encrypted += new_chara;
         }
+    }
+    catch(exception e)
+    {
+        // exception cause
+        fprintf(stderr, "VignereCipher() failed in file %s at line # %d\n", __FILE__, __LINE__);
 
-        ascii_of_chara_message = int(chara_from_message);
+        // error message
+        cout << e.what() << endl;
 
-        chara_from_repted = repted_key[i];
-        ascii_of_chara_repetd = int(chara_from_repted);
-        
-        new_chara = ascii_of_a +  (Mod((ascii_of_chara_message + ascii_of_chara_repetd), 26));
-        encrypted += new_chara;
+        // exit failure
+        exit(EXIT_FAILURE);
     }
 
     // return the encrypted message
     return encrypted;
-
 }
 
 
 /**
- * @brief The Basic Encyrpting that object uses to encrypte instance attribute
+ * @brief The basic function used by object to encrypt instance attribute
  * @details This function is based on the overloaded version: look above
+ * @details For a more details on Vignere cipher check this link: https://en.wikipedia.org/wiki/Vigen%C3%A8re_cipher
+ * @param t_key An essential string for the encrypting process
  */
-void Encryptor::EncryptUsingVignereCipher()
+void Encryptor::VignereCipher(const string& t_key)
 {
-    m_EncryptedSenctence = Encryptor::EncryptUsingVignereCipher(m_OriginalSenctence);
+    m_EncryptedSenctence = Encryptor::VignereCipher(m_OriginalSenctence, t_key);
 
     // cipher used in encryption process: Vignere Cipher
     m_UsedCipher = "Vignere Cipher";
@@ -727,11 +1062,10 @@ istream& operator>>(istream& input, Encryptor& encryptor)
     getline(input >> ws, s);
 
     // add sentence
-    encryptor.SetSentenceToEncrypt(s);
+    encryptor.SetSentence(s);
 
     // return istream refefrence (incase there is more than one >> )
     return input;
-
 }
 
 
@@ -746,7 +1080,7 @@ ostream& operator<<(ostream& output, const Encryptor& encryptor)
 {
     // print the encrpytor
     output << "---- Encryptor Details ----\n";
-    output << "Original Sentence ( Unencrypted ): " << encryptor.GetOriginalSenctence() << "\n" << "Encrypted Senctence: " << encryptor.GetEncryptedSentence() << "\n" << "Used Cipher: " << encryptor.GetUsedCipher() << "\n";
+    output << "Id: " << encryptor.GetId() << "\n" << "Original Sentence ( Unencrypted ): " << encryptor.GetOriginalSenctence() << "\n" << "Encrypted Senctence: " << encryptor.GetEncryptedSentence() << "\n" << "Used Cipher: " << encryptor.GetUsedCipher() << "\n";
 
     // return refrence to ostream (incase there is more than one << )
     return output;
@@ -812,7 +1146,7 @@ void Encryptor::ModifyAlphabet(string &t_modifiedAlphabet, string t_alphabet, st
  * @param currentNumberOfEncryptors 
  * @return string 
  */
-string Encryptor::GenerateId(int totalNumberOfEncryptors)
+string Encryptor::GenerateId(int totalNumberOfEncryptors, bool forEncryptor)
 {
     /* formula: EN-CurrentNumberOfEncryptors */
 
@@ -820,7 +1154,8 @@ string Encryptor::GenerateId(int totalNumberOfEncryptors)
     string id = "";
 
     // add prefix En- to it
-    id += "ENC-";
+    if (forEncryptor) id += "ENC-";
+    else id += "DEC-";
 
     // calcualte nDigitsInNumberOfEncryptors thanks to https://www.geeksforgeeks.org/program-count-digits-integer-3-different-methods/
     int nDigitsInNumberOfEncryptors = floor(log10(totalNumberOfEncryptors) + 1);
@@ -848,11 +1183,26 @@ string Encryptor::GenerateId(int totalNumberOfEncryptors)
         id += to_string(totalNumberOfEncryptors);
     }
 
-
     // return id
     return id;
-    
+}
 
-    
 
+bool Encryptor::IsComprisedOfAbc(const string& s) const
+{
+    // flag, initialized as true
+    bool ans = true;
+    // iterate over each letter
+    for (size_t i = 0; i < s.length(); ++i)
+    {
+        // if not alpha, then break and return false
+        if (!isalpha(s[i]))
+        {
+            ans = false;
+            break;
+        }
+    }
+
+    // return the answer
+    return ans;
 }

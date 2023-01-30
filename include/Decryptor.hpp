@@ -1,45 +1,41 @@
 /**
  * @file Decryptor.hpp
- * @author your name (you@domain.com)
+ * @author Fady Kamal (popfadykamal151617@gmail.com)
  * @brief 
  * @version 0.1
- * @date 2023-01-22
+ * @date 2023-01-24
  * 
  * @copyright Copyright (c) 2023
  * 
  */
 #pragma once
-#include <iostream>
-#include <string>
+#include "Encryptor.hpp"
 #include <vector>
-#include <limits>
-#include <cstring>
-#include <algorithm>
-#include <cmath>
 #include <bits/stdc++.h>
-using namespace std;
+#include "../src/Exceptions/DecryptorExceptions.cpp"
 
 
-class Decryptor
+/* Notes: incases calling any constructor from derived class, and there was a default in the base, bases default contructor is called first */
+
+
+
+class Decryptor: public Encryptor 
 {
-    /* Instance Attributes */
+    /* Instance Attributes (Local Attributes ) */
 protected:
-    string m_Id;
-    string m_OriginalSentence;
     string m_DecryptedSentence;
-    string m_UsedCipher;
     bool m_IsDecrypted;
 
 
-    /* Static Attributes (related to class only, their life time is the whole program)*/
-    static int m_NoDecryptors;
-    static int m_NoCurrentDecryptors;
+    /* Static Attributes ( Related to the class only, have nothing to do with objects )*/
+    static int m_TotalNoDecryptors;
+    static int m_CurrentNoDecryptors;
 
-    /* Big 5 and Parametrized constructors */
+    /* Big 5 and Parametrized constructor */
 public:
-    Decryptor();                                    // Default constructor
-    Decryptor(string t_sentenc);                    // Parametrized constructor
-    Decryptor(const Decryptor&);                    // Copy constructor
+    Decryptor();                                    // Default construtctor
+    Decryptor(string t_sentence);                   // Parametrized constructor
+    Decryptor(const Decryptor& );                   // Copy constructor
     Decryptor& operator= (const Decryptor&);        // Copy assignment operator
     // Decryptor(Decryptor&&);                         // Move constructor
     // Decryptor& operator= (Decryptor&&);             // Move assignment operator
@@ -47,57 +43,50 @@ public:
 
 
 
-    /* Instance Methods (Setters, Getters)*/
-    inline void SetSenctenceToDecrypt(string t_sentence);
-    inline string GetOriginalSentence() const;
-    inline string GetDecryptedSentence() const;
-    inline string GetUsedCipher() const;
-    inline string GetId() const;
-    inline bool IsGivenSentenceGotDecrypted() const;
+    /* Instance Methods (Setters and Getters ) */
+    string GetDecryptedSentence() const;
+    bool IsSentenceGotDecrypted() const;                // note: make the function const if it's not modifieing the instance attributes.
+                                                        
 
 
     /* Ciphers */
-    string DecryptUsingAffineCipher(string t_sentenceToGetDecrypted) const;
-    void DecryptUsingAffineCipher();
+    virtual string AffineCipher(string t_sentence, const int& a = 1, const int& b = 3) const;
+    virtual void AffineCipher(const int& c = 1, const int& b = 3);
 
+    virtual string AtpashCipher(string t_sentence) const;
+    virtual void AtpashCipher();
     
-    string DecryptUsingAtpashCipher(string t_sentenceToGetDecrypted) const;
-    void DecryptUsingAtpashCipher();
+    virtual string BaconianCipher(string t_sentence) const;
+    virtual void BaconianCipher();
 
-    string DecryptUsingBaconianCipher(string t_sentenceToGetDecrypted) const;
-    void DecryptUsingBaconianCipher();
+    virtual string CaesarCipher(string t_sentence, const int& t_shift = 1) const;
+    virtual void CaesarCipher(const int& t_shift = 1);
 
-    string DecryptUsingCaesarCipher(string t_sentenceToGetDecrypted) const;
-    void DecryptUsingCaesarCipher();
+    virtual string MorseCode(string t_sentence) const;
+    virtual void MorseCode();
 
-    string DecryptUsingMorseCode(string t_sentenceToGetDecrypted) const;
-    void DecryptUsingMorseCode();
+    virtual string SimpleSubstitutionCipher(string t_sentence, const string& t_key = "zyxwvutsrqponmlkjihgfedcba") const;
+    virtual void SimpleSubstitutionCipher(const string& t_key = "zyxwvutsrqponmlkjihgfedcba");
 
-    string DecryptUsingSimpleSubstitutionCipher(string t_sentenceToGetDecrypted) const;
-    void DecryptUsingSimpleSubstitutionCipher();
-
-    // string DecryptUsingVignereCipher(string t_sentenceToGetDecrypted) const;
-    // void DecryptUsingVignereCipher();
+    // virtual string VignereCipher(string t_sentence) const;
+    // virtual void VignereCipher();
 
 
-    /* Operator Overloading (Bitwise) */
-    friend istream& operator>> (istream& input, Decryptor& decryptor);
-    friend ostream& operator<< (ostream& output, const Decryptor& decryptor); 
+    /* Operators Overloading ( bitwise )  ( Compile Time Polymorphism)*/
+    friend istream& operator>> (istream& input, Decryptor& decryptor);          // Insertion operator >>
+    friend ostream& operator<< (ostream& output, const Decryptor& decryptor);   // Extraction operator <<
 
 
-    /* Static Methods (Related to class only, have no relation with any object) */
-    static int GetTotalNumberOfDecryptorThisClassMade();
-    static int GetTotalNumberOfTheAliveDecryptors();
-    static string GenerateId(int currentDecryptorsCount);
+
+    /* Static Methods (Related to class only and have noting to do with any object )*/
+    static int GetTotalNumberOfObjectsThisClassMade();
+    static int GetTotalNumberOfAliveObjects();
 
 
     /* Helper Functions */
-private:
-    long Mod(int a, int b) const;
-    void ModifyAlphabet(string &t_modifiedAlphabet, string alphabet, string t_key) const;
-
-    template<typename T>
+protected:
+    template <typename T>
     int GetIndex(vector<T> v, T target) const;
-
+    bool IsMorseCode(const string& s) const;
 };
 

@@ -15,10 +15,7 @@
 #include <cstring>
 #include <algorithm>
 #include <cmath>
-<<<<<<< HEAD
-#include "Exceptions/EncryptorExceptions.hpp"
-=======
->>>>>>> b89f85aabbab48cf5c629157cc2b50c3d919990f
+#include "../src/Exceptions/EncryptorExceptions.cpp"
 using namespace std;
 
 
@@ -34,8 +31,8 @@ protected:
     
 
     /* Static Attributes (Related to the class only (has no relation with any object) */
-    static int m_NoEncryptors;
-    static int m_NoCurrentEncyptors;
+    static int m_NoObjects;
+    static int m_CurrentNoObjects;
 
 
     /* Big 5 InAddition to (parametrized constructors) */
@@ -50,7 +47,7 @@ public:
 
 
     /* Instance Methods (Setter and Getters) */
-    inline void SetSentenceToEncrypt(string t_senctence);
+    inline void SetSentence(string t_senctence);
     inline string GetOriginalSenctence() const;
 
     inline string GetEncryptedSentence() const;
@@ -61,40 +58,43 @@ public:
 
 
     /* Ciphers */
-    string EncryptUsingAffineCipher(string t_sentenceToGetEncrypted) const;                   // Affine Cipher
-    void EncryptUsingAffineCipher();                                                    // An overloaded version to encrypt a given sentence
+    virtual string AffineCipher(string t_sentenceToGetEncrypted, const int& a = 1, const int&b = 3) const;           // Affine Cipher
+    virtual void AffineCipher(const int&a = 1, const int& b = 3);                                                    // An overloaded version to encrypt a given sentence
 
-    string EncryptUsingAtpashCipher(string t_sentenceToGetEncrypted) const;
-    void EncryptUsingAtpashCipher();
+    virtual string AtpashCipher(string t_sentenceToGetEncrypted) const;
+    virtual void AtpashCipher();
 
-    string EncryptUsingBaconianCipher(string t_sentenceToGetEncrypted) const;
-    void EncryptUsingBaconianCipher();
+    virtual string BaconianCipher(string t_sentenceToGetEncrypted) const;
+    virtual void BaconianCipher();
 
-    string EncryptUsingCaesarCipher(string t_sentenceToGetEncrypted) const;
-    void EncryptUsingCaesarCipher();
+    virtual string CaesarCipher(string t_sentenceToGetEncrypted, const int& shift = 1) const;
+    virtual void CaesarCipher(const int& shift = 1);
 
-    string EncryptUsingMorseCode(string t_sentenceToGetEncrypted) const;
-    void EncryptUsingMorseCode();
+    virtual string MorseCode(string t_sentenceToGetEncrypted) const;
+    virtual void MorseCode();
 
-    string EncryptUsingSimpleSubstitutionCipher(string t_sentenceToGetEncrypted) const;
-    void EncryptUsingSimpleSubstitutionCipher();
+    virtual string SimpleSubstitutionCipher(string t_sentenceToGetEncrypted, const string& t_key = "zyxwvutsrqponmlkjihgfedcba") const;
+    virtual void SimpleSubstitutionCipher(const string& t_key = "zyxwvutsrqponmlkjihgfedcba");
 
-    string EncryptUsingVignereCipher(string t_sentenceToGetEncrypted) const;
-    void EncryptUsingVignereCipher();
+    virtual string VignereCipher(string t_sentenceToGetEncrypted, const string& t_key = "fady") const;
+    virtual void VignereCipher(const string& t_key = "fady");
 
 
+    /* Operators Overloading (bitwise) */
+    friend istream& operator>> (istream& input, Encryptor& t_encryptor);          // Insertion operator
+    friend ostream& operator<< (ostream& output, const Encryptor& t_encryptor);   // Extraction operator
 
 
 
     /* Static Methods (Related To Class only) */
-    static int GetTotalNumberOfEncryptorsThisClassMade();
-    static int GetTotalNumberOfTheAliveEncryptors();
-    static string GenerateId(int totalNumberOfEncryptors); 
+    static int GetTotalNumberOfObjectsThisClassMade();
+    static int GetTotalNumberOfAliveObjects();
+    static string GenerateId(int totalNumberOfEncryptors, bool forEncryptor=true); 
 
 
     /* Helper functions */
-public:
+protected:
     long Mod(int a, int b) const;
     void ModifyAlphabet(string &t_modifiedAlphabet, string t_alphabet, string &t_key) const;
+    bool IsComprisedOfAbc(const string& s) const;
 };
-
