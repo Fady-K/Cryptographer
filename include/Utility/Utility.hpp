@@ -32,7 +32,7 @@ public:
      * @return int Index
      */
     template <typename T>
-    static int GetIndex(vector<T> v, T target);
+    static int GetIndex(const vector<T>& v, const T& target);
 
 
     /**
@@ -42,7 +42,7 @@ public:
      * @param b 
      * @return long outcome of a % b
      */
-     static long Mod(int a, int b);
+     static long Mod(const int& a, const int& b);
 
 
     /**
@@ -53,8 +53,4 @@ public:
      * @return false otherwise
      */
     static bool IsComprisedOfAbc(const string& s);
-
-
-    
-
 };
