@@ -97,7 +97,7 @@ int main()
     */
 
     // d.AffineCipher(-1, -5);
-    // d.AffineCipher(1, 5);
+    // d.AffineCipher(1, -5);
     cout << d << endl;
 
 
