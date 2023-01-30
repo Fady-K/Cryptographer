@@ -1,7 +1,7 @@
 /**
  * @file Utility.hpp
- * @author your name (you@domain.com)
- * @brief 
+ * @author Fady Kamal (popfadykamal151617@gmail.com)
+ * @brief Header file containing Utility class, which is comprised of helper functions for both Encryptor and Decryptor classes.
  * @version 0.1
  * @date 2023-01-30
  * 
