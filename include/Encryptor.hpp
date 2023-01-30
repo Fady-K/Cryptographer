@@ -16,6 +16,7 @@
 #include <algorithm>
 #include <cmath>
 #include "../src/Exceptions/EncryptorExceptions.cpp"
+#include "../src/Utility/Utility.cpp"
 using namespace std;
 
 
@@ -94,7 +95,5 @@ public:
 
     /* Helper functions */
 protected:
-    long Mod(int a, int b) const;
     void ModifyAlphabet(string &t_modifiedAlphabet, string t_alphabet, string &t_key) const;
-    bool IsComprisedOfAbc(const string& s) const;
 };

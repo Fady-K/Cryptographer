@@ -9,10 +9,12 @@
  * 
  */
 #pragma once
-#include "Encryptor.hpp"
 #include <vector>
 #include <bits/stdc++.h>
+#include "Encryptor.hpp"
 #include "../src/Exceptions/DecryptorExceptions.cpp"
+#include "../src/Utility/Utility.cpp"
+
 
 
 /* Notes: incases calling any constructor from derived class, and there was a default in the base, bases default contructor is called first */
@@ -85,8 +87,6 @@ public:
 
     /* Helper Functions */
 protected:
-    template <typename T>
-    int GetIndex(vector<T> v, T target) const;
     bool IsMorseCode(const string& s) const;
 };
 
