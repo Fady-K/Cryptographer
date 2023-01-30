@@ -551,7 +551,7 @@ string Encryptor::CaesarCipher(string t_sentenceToGetEncrypted, const int& shift
                     try
                     {
                         // encrypt this char
-                        new_position = Mod((position_in_alphabet + shift), 26);
+                        new_position = Utility::Mod((position_in_alphabet + shift), 26);
                         encrypted = Alphabet[new_position];
                         encrpted_message += encrypted;
                     }
@@ -754,7 +754,7 @@ string Encryptor::SimpleSubstitutionCipher(string t_sentenceToGetEncrypted, cons
          * can't include special characters or digits
         */
 
-        if (!IsComprisedOfAbc(t_key))
+        if (!Utility::IsComprisedOfAbc(t_key))
         {
             throw(EncryptorExceptions("Key must be comprised alphabet letter only, can't have special characters or digits!"));
         }
@@ -914,7 +914,7 @@ string Encryptor::VignereCipher(string t_sentenceToGetEncrypted, const string& t
     try
     {
         // check key validation
-        if (!IsComprisedOfAbc(t_key))
+        if (!Utility::IsComprisedOfAbc(t_key))
         {
             // throw EncryptorExcpetion
             throw(EncryptorExceptions("Key must be comprised of alphabet letters only, can't have special characters or digits!"));
@@ -958,7 +958,7 @@ string Encryptor::VignereCipher(string t_sentenceToGetEncrypted, const string& t
         {
             if (counter > key.length() - 1)
             {
-                counter = Mod(counter, key.length());
+                counter = Utility::Mod(counter, key.length());
             }
 
             char chara = key[counter];
@@ -1006,7 +1006,7 @@ string Encryptor::VignereCipher(string t_sentenceToGetEncrypted, const string& t
             chara_from_repeated = repeated_key[i];
             ascii_of_chara_repeated = int(chara_from_repeated);
             
-            new_chara = ascii_of_a +  (Mod((ascii_of_chara_message + ascii_of_chara_repeated), 26));
+            new_chara = ascii_of_a +  (Utility::Mod((ascii_of_chara_message + ascii_of_chara_repeated), 26));
             encrypted += new_chara;
         }
     }
@@ -1090,15 +1090,6 @@ ostream& operator<<(ostream& output, const Encryptor& encryptor)
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 														/* ( Helper Functions ) */
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-/**
- * @brief 
- * 
- * @param a 
- * @param b 
- * @return long 
- */
-long Encryptor::Mod(int a, int b) const { return (a%b + b) % b; }
 
 
 /**
@@ -1185,24 +1176,4 @@ string Encryptor::GenerateId(int totalNumberOfEncryptors, bool forEncryptor)
 
     // return id
     return id;
-}
-
-
-bool Encryptor::IsComprisedOfAbc(const string& s) const
-{
-    // flag, initialized as true
-    bool ans = true;
-    // iterate over each letter
-    for (size_t i = 0; i < s.length(); ++i)
-    {
-        // if not alpha, then break and return false
-        if (!isalpha(s[i]))
-        {
-            ans = false;
-            break;
-        }
-    }
-
-    // return the answer
-    return ans;
 }

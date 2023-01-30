@@ -358,7 +358,7 @@ string Decryptor::BaconianCipher(string t_sentenceToGetDecrypted) const
             if(isalpha(t_sentenceToGetDecrypted[i - 1]))
             {
                 // decrypt
-                decrypted += abc[GetIndex(code, tmp)];
+                decrypted += abc[Utility::GetIndex(code, tmp)];
 
                 // empty temp
                 tmp = "";
@@ -387,7 +387,7 @@ string Decryptor::BaconianCipher(string t_sentenceToGetDecrypted) const
             
             
             // calcualte the last temp
-            if ((i == t_sentenceToGetDecrypted.size() - 1)) { decrypted += abc[GetIndex(code, tmp)]; }
+            if ((i == t_sentenceToGetDecrypted.size() - 1)) { decrypted += abc[Utility::GetIndex(code, tmp)]; }
 
         }
     }
@@ -444,7 +444,7 @@ string Decryptor::CaesarCipher(string t_sentenceToGetDecrypted, const int& t_shi
                         position_in_abc = abc.find(character);
 
                         // calculate it's new position based on the ecyrption formula f(x) = (x + shift) % 26
-                        new_position = Mod((position_in_abc - t_shift), 26);
+                        new_position = Utility::Mod((position_in_abc - t_shift), 26);
 
                         // fetch the decrypted char , and appended to the decrypted string
                         decrypted += abc[new_position];
@@ -615,7 +615,7 @@ string Decryptor::SimpleSubstitutionCipher(string t_sentenceToGetDecrypted, cons
          * can't include special characters or digits
         */
 
-        if (!IsComprisedOfAbc(t_key))
+        if (!Utility::IsComprisedOfAbc(t_key))
         {
             throw(DecryptorExceptions("Key must be comprised alphabet letter only, can't have special characters or digits!"));
         }
@@ -766,29 +766,6 @@ ostream& operator<<(ostream& output, const Decryptor& decryptor)
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 														/* Helper Functions */
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
-/**
- * @brief Using linear search this function takes vector of type T and target then returns i of target in the vector. (i: index)
- * 
- * @tparam T vector type
- * @param v vector of type T
- * @param target 
- * @return int index of target in vector
- */
-template <typename T>
-int Decryptor::GetIndex(vector<T> v, T target) const
-{
-   for (size_t i = 0; i < v.size(); ++i)
-   {
-        if (v[i] == target)
-        {
-            return i;
-        }
-   }
-
-   return -1;
-}
 
 
 bool Decryptor::IsMorseCode(const string& s) const 
