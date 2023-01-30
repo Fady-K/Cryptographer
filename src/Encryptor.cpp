@@ -1080,7 +1080,7 @@ ostream& operator<<(ostream& output, const Encryptor& encryptor)
 {
     // print the encrpytor
     output << "---- Encryptor Details ----\n";
-    output << "Original Sentence ( Unencrypted ): " << encryptor.GetOriginalSenctence() << "\n" << "Encrypted Senctence: " << encryptor.GetEncryptedSentence() << "\n" << "Used Cipher: " << encryptor.GetUsedCipher() << "\n";
+    output << "Id: " << encryptor.GetId() << "\n" << "Original Sentence ( Unencrypted ): " << encryptor.GetOriginalSenctence() << "\n" << "Encrypted Senctence: " << encryptor.GetEncryptedSentence() << "\n" << "Used Cipher: " << encryptor.GetUsedCipher() << "\n";
 
     // return refrence to ostream (incase there is more than one << )
     return output;
