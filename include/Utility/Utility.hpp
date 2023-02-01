@@ -36,7 +36,7 @@ public:
 
 
     /**
-     * @brief Perform modular operation
+     * @brief Performs modular operation
      * 
      * @param a 
      * @param b 
@@ -46,7 +46,7 @@ public:
 
 
     /**
-     * @brief Checks if the given string is comprised of alphabet only or not
+     * @brief Checks whether the given string is comprised of alphabet only or not
      * 
      * @param s String to check
      * @return true if comprised of alphabet letters only
