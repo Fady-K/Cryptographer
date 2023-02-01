@@ -1,5 +1,17 @@
 {
     "files.associations": {
-        "xstring": "cpp"
+        "memory": "cpp",
+        "functional": "cpp",
+        "iterator": "cpp",
+        "numeric": "cpp",
+        "ratio": "cpp",
+        "regex": "cpp",
+        "istream": "cpp",
+        "ostream": "cpp",
+        "*.tcc": "cpp",
+        "iosfwd": "cpp",
+        "string": "cpp",
+        "exception": "cpp",
+        "iostream": "cpp"
     }
 }
